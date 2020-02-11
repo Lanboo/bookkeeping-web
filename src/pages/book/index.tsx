@@ -122,10 +122,10 @@ const TableList: React.FC<TableListProps> = () => {
               setStepFormValues(record);
             }}
           >
-            配置
+            修改
           </a>
           <Divider type="vertical" />
-          <a href="">订阅警报</a>
+          <a href="">删除</a>
         </>
       ),
     },
@@ -150,6 +150,11 @@ const TableList: React.FC<TableListProps> = () => {
         request={params => queryRule(params)}
         columns={columns}
         rowSelection={{}}
+        pagination={{
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '20', '30', '50'],
+          }
+        }
       />
       <CreateForm
         onSubmit={async value => {
