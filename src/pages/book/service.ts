@@ -2,7 +2,7 @@ import request from '@/utils/request';
 import { TableListParams } from './data.d';
 
 export async function queryRule(params?: TableListParams) {
-  return request('/api/book', {
+  return request('POST /api/book/query', {
     params,
   });
 }
