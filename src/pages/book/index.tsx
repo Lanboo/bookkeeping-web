@@ -114,7 +114,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record) => (
+      render: (_, record,index ,action) => (
         <>
           <a
             onClick={() => {
@@ -125,7 +125,12 @@ const TableList: React.FC<TableListProps> = () => {
             修改
           </a>
           <Divider type="vertical" />
-          <a href="">删除</a>
+          <a 
+            onClick={async e => {
+              await handleRemove([record]);
+              action.reload();
+            }}
+          >删除</a>
         </>
       ),
     },
@@ -147,10 +152,11 @@ const TableList: React.FC<TableListProps> = () => {
         tableAlertRender={() => (
           false
         )}
-        request={params => queryRule(params)}
+        request={params => (queryRule(params))}
         columns={columns}
         rowSelection={{}}
         pagination={{
+            defaultPageSize: 10,
             showSizeChanger: true,
             pageSizeOptions: ['10', '20', '30', '50'],
           }
