@@ -40,7 +40,7 @@ function getRule(req: Request, res: Response, u: string) {
     total: dataSource.length,
     success: true,
     pageSize,
-    current: parseInt(`${params.currentPage}`, 10) || 1,
+    current: parseInt(`${params.current}`, 10) || 1,
   };
 
   return res.json(result);

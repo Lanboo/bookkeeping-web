@@ -24,5 +24,5 @@ export interface TableListParams {
   crtTime?: Date;
   uptTime?: Date;
   pageSize?: number;
-  currentPage?: number;
+  current?: number;
 }

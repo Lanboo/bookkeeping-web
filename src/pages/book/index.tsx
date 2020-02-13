@@ -9,7 +9,7 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
-import { queryRule, updateRule, addRule, removeRule } from './service';
+import { query, update, add, remove } from './service';
 
 interface TableListProps extends FormComponentProps { }
 
@@ -20,7 +20,7 @@ interface TableListProps extends FormComponentProps { }
 const handleAdd = async (fields: FormValueType) => {
   const hide = message.loading('正在添加');
   try {
-    await addRule({
+    await add({
       bookName: fields.bookName,
     });
     hide();
@@ -40,7 +40,7 @@ const handleAdd = async (fields: FormValueType) => {
 const handleUpdate = async (fields: FormValueType) => {
   const hide = message.loading('正在配置');
   try {
-    await updateRule({
+    await update({
       userCode: fields.userCode,
       bookName: fields.bookName,
       id: fields.id,
@@ -64,7 +64,7 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    await removeRule({
+    await remove({
       key: selectedRows.map(row => row.id),
     });
     hide();
@@ -86,6 +86,7 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '用户代码',
       dataIndex: 'userCode',
+      hideInSearch: true,
     },
     {
       title: '用户名称',
@@ -152,7 +153,7 @@ const TableList: React.FC<TableListProps> = () => {
         tableAlertRender={() => (
           false
         )}
-        request={params => (queryRule(params))}
+        request={params => (query(params))}
         columns={columns}
         rowSelection={{}}
         pagination={{

@@ -1,14 +1,17 @@
 import request from '@/utils/request';
 import { TableListParams } from './data.d';
 
-export async function queryRule(params?: TableListParams) {
-  return request('POST /api/book/query', {
-    params,
+export async function query(params?: TableListParams) {
+  return request('/api/book/query', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
   });
 }
 
-export async function removeRule(params: { key: number[] }) {
-  return request('/api/book', {
+export async function remove(params: { key: number[] }) {
+  return request('/api/book/remove', {
     method: 'POST',
     data: {
       ...params,
@@ -17,8 +20,8 @@ export async function removeRule(params: { key: number[] }) {
   });
 }
 
-export async function addRule(params: TableListParams) {
-  return request('/api/book', {
+export async function add(params: TableListParams) {
+  return request('/api/book/add', {
     method: 'POST',
     data: {
       ...params,
@@ -27,8 +30,8 @@ export async function addRule(params: TableListParams) {
   });
 }
 
-export async function updateRule(params: TableListParams) {
-  return request('/api/book', {
+export async function update(params: TableListParams) {
+  return request('/api/book/update', {
     method: 'POST',
     data: {
       ...params,
