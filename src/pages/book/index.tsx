@@ -9,7 +9,7 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
-import { query, update, add, remove } from './service';
+import { query, update, save, remove } from './service';
 
 interface TableListProps extends FormComponentProps { }
 
@@ -20,7 +20,7 @@ interface TableListProps extends FormComponentProps { }
 const handleAdd = async (fields: FormValueType) => {
   const hide = message.loading('正在添加');
   try {
-    await add({
+    await save({
       bookName: fields.bookName,
     });
     hide();
@@ -64,9 +64,7 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    await remove({
-      key: selectedRows.map(row => row.id),
-    });
+    await remove(selectedRows.map(row => row.id));
     hide();
     message.success('删除成功，即将刷新');
     return true;
@@ -142,13 +140,16 @@ const TableList: React.FC<TableListProps> = () => {
       <ProTable<TableListItem>
         actionRef={actionRef}
         rowKey="id"
-        toolBarRender={() => [
+        toolBarRender={(action, { selectedRows }) => [
           <Button icon={<PlusOutlined />} type="primary" onClick={() => handleModalVisible(true)}>
             新建
           </Button>,
-          <Button icon={<DeleteFilled />} type="danger" >
+          <Button icon={<DeleteFilled />} type="danger" onClick={async () => {
+              await handleRemove(selectedRows);
+              action.reload();
+          }}>
             删除
-        </Button>,
+          </Button>,
         ]}
         tableAlertRender={() => (
           false

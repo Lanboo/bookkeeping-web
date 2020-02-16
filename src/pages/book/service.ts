@@ -10,22 +10,18 @@ export async function query(params?: TableListParams) {
   });
 }
 
-export async function remove(params: { key: number[] }) {
+export async function remove(params: number[]) {
   return request('/api/book/remove', {
     method: 'POST',
-    data: {
-      ...params,
-      method: 'delete',
-    },
+    data: params,
   });
 }
 
-export async function add(params: TableListParams) {
-  return request('/api/book/add', {
+export async function save(params: TableListParams) {
+  return request('/api/book/save', {
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }
