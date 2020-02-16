@@ -33,7 +33,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账本名称">
         {form.getFieldDecorator('bookName', {
           rules: [{ required: true, message: '不能为空！', min: 1 }],
-        })(<Input placeholder="账本名称" />)}
+        })(<Input placeholder="账本名称" allowClear/>)}
       </FormItem>
     </Modal>
   );

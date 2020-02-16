@@ -1,7 +1,7 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Button, Divider, message } from 'antd';
+import { Button, Divider, message, Modal } from 'antd';
 import React, { useState, useRef } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -10,8 +10,10 @@ import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
 import { query, update, save, remove } from './service';
+import 'antd/dist/antd.css';
 
 interface TableListProps extends FormComponentProps { }
+
 
 /**
  * 添加节点
@@ -38,20 +40,19 @@ const handleAdd = async (fields: FormValueType) => {
  * @param fields
  */
 const handleUpdate = async (fields: FormValueType) => {
-  const hide = message.loading('正在配置');
+  const hide = message.loading('正在修改');
   try {
     await update({
-      userCode: fields.userCode,
       bookName: fields.bookName,
       id: fields.id,
     });
     hide();
 
-    message.success('配置成功');
+    message.success('修改成功');
     return true;
   } catch (error) {
     hide();
-    message.error('配置失败请重试！');
+    message.error('修改失败请重试！');
     return false;
   }
 };
@@ -60,16 +61,22 @@ const handleUpdate = async (fields: FormValueType) => {
  *  删除节点
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: TableListItem[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
+const handleRemove = (selectedRows: TableListItem[]) => {
+  if (!selectedRows || selectedRows.length == 0) return true;
   try {
-    await remove(selectedRows.map(row => row.id));
-    hide();
-    message.success('删除成功，即将刷新');
+    Modal.confirm({
+      title: '确认删除?',
+      okType: 'danger',
+      async onOk() {
+        const hide = message.loading('正在删除');
+        await remove(selectedRows.map(row => row.id));
+        hide();
+        message.success('删除成功，即将刷新');
+      },
+      onCancel() { },
+    });
     return true;
   } catch (error) {
-    hide();
     message.error('删除失败，请重试');
     return false;
   }
@@ -113,7 +120,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record,index ,action) => (
+      render: (_, record, index, action) => (
         <>
           <a
             onClick={() => {
@@ -124,7 +131,7 @@ const TableList: React.FC<TableListProps> = () => {
             修改
           </a>
           <Divider type="vertical" />
-          <a 
+          <a
             onClick={async e => {
               await handleRemove([record]);
               action.reload();
@@ -135,6 +142,9 @@ const TableList: React.FC<TableListProps> = () => {
     },
   ];
 
+
+  const deleteBtnState = {disabled:'disabled'};
+
   return (
     <PageHeaderWrapper>
       <ProTable<TableListItem>
@@ -144,9 +154,9 @@ const TableList: React.FC<TableListProps> = () => {
           <Button icon={<PlusOutlined />} type="primary" onClick={() => handleModalVisible(true)}>
             新建
           </Button>,
-          <Button icon={<DeleteFilled />} type="danger" onClick={async () => {
-              await handleRemove(selectedRows);
-              action.reload();
+          <Button icon={<DeleteFilled />} type="danger" {...deleteBtnState} onClick={async () => {
+            await handleRemove(selectedRows);
+            action.reload();
           }}>
             删除
           </Button>,
@@ -156,12 +166,21 @@ const TableList: React.FC<TableListProps> = () => {
         )}
         request={params => (query(params))}
         columns={columns}
-        rowSelection={{}}
-        pagination={{
-            defaultPageSize: 10,
-            showSizeChanger: true,
-            pageSizeOptions: ['10', '20', '30', '50'],
+        rowSelection={{
+          onChange: (_selectedRowKeys, selectedRows) => {
+            if (selectedRows && selectedRows.length > 0) {
+              deleteBtnState.disabled = "";
+            }
+            else {
+              deleteBtnState.disabled = "disabled";
+            }
           }
+        }}
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '30', '50'],
+        }
         }
       />
       <CreateForm

@@ -31,7 +31,6 @@ export async function update(params: TableListParams) {
     method: 'POST',
     data: {
       ...params,
-      method: 'update',
     },
   });
 }
