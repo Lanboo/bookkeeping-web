@@ -73,7 +73,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
             initialValue: formVals.userCode,
           })(<Input placeholder="用户代码" disabled />)}
         </FormItem>
-        <FormItem key="memberName" {...this.formLayout} label="账本名称">
+        <FormItem key="memberName" {...this.formLayout} label="成员名称">
           {form.getFieldDecorator('memberName', {
             rules: [{ required: true, message: '不能为空！', min: 1 }],
             initialValue: formVals.memberName,
