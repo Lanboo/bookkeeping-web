@@ -11,6 +11,7 @@ export default {
   'menu.exception.server-error': '500',
 
   'menu.book':'Book Management',
+  'menu.member':'Member Management',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',

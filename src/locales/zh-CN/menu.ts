@@ -11,6 +11,7 @@ export default {
   'menu.exception.server-error': '500',
 
   'menu.book':'账本管理',
+  'menu.member':'成员管理',
 
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',

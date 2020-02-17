@@ -125,6 +125,12 @@ export default {
               component: './book',
             },
             {
+              name: 'member',
+              icon: 'team',
+              path: '/member',
+              component: './member',
+            },
+            {
               component: './404',
             },
           ],
