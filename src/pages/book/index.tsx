@@ -5,7 +5,8 @@ import { Button, Divider, message, Modal } from 'antd';
 import React, { useState, useRef } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
+import ProTable, { ProColumns, ActionType, RequestData } from '@ant-design/pro-table';
+import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
@@ -61,17 +62,18 @@ const handleUpdate = async (fields: FormValueType) => {
  *  删除节点
  * @param selectedRows
  */
-const handleRemove = (selectedRows: TableListItem[]) => {
+const handleRemove = (selectedRows: TableListItem[], action: UseFetchDataAction<RequestData<TableListItem>>) => {
   if (!selectedRows || selectedRows.length == 0) return true;
   try {
     Modal.confirm({
       title: '确认删除?',
       okType: 'danger',
-      async onOk() {
+      onOk() {
         const hide = message.loading('正在删除');
-        await remove(selectedRows.map(row => row.id));
+        remove(selectedRows.map(row => row.id));
         hide();
         message.success('删除成功，即将刷新');
+        action.reload();
       },
       onCancel() { },
     });
@@ -132,9 +134,8 @@ const TableList: React.FC<TableListProps> = () => {
           </a>
           <Divider type="vertical" />
           <a
-            onClick={async e => {
-              await handleRemove([record]);
-              action.reload();
+            onClick={e => {
+              handleRemove([record]);
             }}
           >删除</a>
         </>
@@ -143,7 +144,7 @@ const TableList: React.FC<TableListProps> = () => {
   ];
 
 
-  const deleteBtnState = {disabled:'disabled'};
+  const deleteBtnState = { disabled: 'disabled' };
 
   return (
     <PageHeaderWrapper>
@@ -154,9 +155,8 @@ const TableList: React.FC<TableListProps> = () => {
           <Button icon={<PlusOutlined />} type="primary" onClick={() => handleModalVisible(true)}>
             新建
           </Button>,
-          <Button icon={<DeleteFilled />} type="danger" {...deleteBtnState} onClick={async () => {
-            await handleRemove(selectedRows);
-            action.reload();
+          <Button icon={<DeleteFilled />} type="danger" {...deleteBtnState} onClick={() => {
+            handleRemove(selectedRows);
           }}>
             删除
           </Button>,
