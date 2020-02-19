@@ -155,9 +155,9 @@ const TableList: React.FC<TableListProps> = () => {
       ),
     },
   ];
-  const deleteBtnState = {
-    disabled: 'disabled',
-  };
+
+  const deleteBtnState = { disabled: true };
+  
   return (
     <PageHeaderWrapper>
       <ProTable<TableListItem>
@@ -170,7 +170,7 @@ const TableList: React.FC<TableListProps> = () => {
           <Button
             icon={<DeleteFilled />}
             type="danger"
-            {...deleteBtnState}
+            disabled={deleteBtnState.disabled}
             onClick={() => {
               handleRemove(selectedRows, action);
             }}
@@ -184,9 +184,9 @@ const TableList: React.FC<TableListProps> = () => {
         rowSelection={{
           onChange: (_selectedRowKeys, selectedRows) => {
             if (selectedRows && selectedRows.length > 0) {
-              deleteBtnState.disabled = '';
+              deleteBtnState.disabled = false;
             } else {
-              deleteBtnState.disabled = 'disabled';
+              deleteBtnState.disabled = true;
             }
           },
         }}

@@ -144,7 +144,7 @@ const TableList: React.FC<TableListProps> = () => {
   ];
 
 
-  const deleteBtnState = { disabled: 'disabled' };
+  const deleteBtnState = { disabled: true };
 
   return (
     <PageHeaderWrapper>
@@ -155,7 +155,7 @@ const TableList: React.FC<TableListProps> = () => {
           <Button icon={<PlusOutlined />} type="primary" onClick={() => handleModalVisible(true)}>
             新建
           </Button>,
-          <Button icon={<DeleteFilled />} type="danger" {...deleteBtnState} onClick={() => {
+          <Button icon={<DeleteFilled />} type="danger" disabled={deleteBtnState.disabled} onClick={() => {
             handleRemove(selectedRows);
           }}>
             删除
@@ -169,10 +169,10 @@ const TableList: React.FC<TableListProps> = () => {
         rowSelection={{
           onChange: (_selectedRowKeys, selectedRows) => {
             if (selectedRows && selectedRows.length > 0) {
-              deleteBtnState.disabled = "";
+              deleteBtnState.disabled = false;
             }
             else {
-              deleteBtnState.disabled = "disabled";
+              deleteBtnState.disabled = true;
             }
           }
         }}
