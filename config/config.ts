@@ -131,6 +131,12 @@ export default {
               component: './member',
             },
             {
+              name: 'category',
+              icon: 'appstore',
+              path: '/category',
+              component: './category',
+            },
+            {
               component: './404',
             },
           ],
