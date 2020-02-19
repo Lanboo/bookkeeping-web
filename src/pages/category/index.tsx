@@ -15,7 +15,7 @@ import 'antd/dist/antd.css';
 import MyTreeSelect from './components/MyTreeSelect';
 
 
-interface TableListProps extends FormComponentProps {}
+interface TableListProps extends FormComponentProps { }
 /**
  * 添加节点
  * @param fields
@@ -64,18 +64,13 @@ const handleUpdate = async (fields: FormValueType) => {
  *  删除节点
  * @param selectedRows
  */
-
-const handleRemove = (
-  selectedRows: TableListItem[],
-  action: UseFetchDataAction<RequestData<TableListItem>>
-) => {
+const handleRemove = (selectedRows: TableListItem[], action: UseFetchDataAction<RequestData<TableListItem>>) => {
   if (!selectedRows || selectedRows.length == 0) return true;
 
   try {
     Modal.confirm({
       title: '确认删除?',
       okType: 'danger',
-
       onOk() {
         const hide = message.loading('正在删除');
         remove(selectedRows.map(row => row.id));
@@ -83,8 +78,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-
-      onCancel() {},
+      onCancel() { },
     });
     return true;
   } catch (error) {
