@@ -13,6 +13,7 @@ import { TableListItem } from './data.d';
 import { query, queryList, update, save, remove } from './service';
 import 'antd/dist/antd.css';
 import MyTreeSelect from './components/MyTreeSelect';
+import JsTreeList from "js-tree-list";
 
 
 interface TableListProps extends FormComponentProps { }
@@ -38,11 +39,11 @@ const handleAdd = async (fields: FormValueType) => {
     return false;
   }
 };
+
 /**
  * 更新节点
  * @param fields
  */
-
 const handleUpdate = async (fields: FormValueType) => {
   const hide = message.loading('正在修改');
 
@@ -60,6 +61,7 @@ const handleUpdate = async (fields: FormValueType) => {
     return false;
   }
 };
+
 /**
  *  删除节点
  * @param selectedRows
@@ -89,7 +91,7 @@ const handleRemove = (selectedRows: TableListItem[], action: UseFetchDataAction<
 
 let treeData: [] = [];
 
-onLoadData = async () => {
+const onLoadData = async () => {
   await queryList().then(data => {
     let queryData: TableListItem[] = data;
     let tempData = queryData.map(item => (
@@ -271,6 +273,7 @@ const TableList: React.FC<TableListProps> = () => {
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef<ActionType>();
+  onLoadData();
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '用户代码',
@@ -290,7 +293,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '父级类型',
       dataIndex: 'parentId',
       renderFormItem: () => {
-        return <MyTreeSelect />;
+        return <MyTreeSelect treeData={treeData} />;
       },
       ellipsis: true,
     },
@@ -386,6 +389,7 @@ const TableList: React.FC<TableListProps> = () => {
         }}
         onCancel={() => handleModalVisible(false)}
         modalVisible={createModalVisible}
+        treeData={treeData}
       />
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
@@ -407,6 +411,7 @@ const TableList: React.FC<TableListProps> = () => {
           }}
           updateModalVisible={updateModalVisible}
           values={stepFormValues}
+          treeData={treeData}
         />
       ) : null}
     </PageHeaderWrapper>
