@@ -11,13 +11,13 @@ interface FormProps extends FormComponentProps {
 }
 
 
-
 class MyTreeSelect extends React.Component<FormProps> {
   state = {
     value: undefined,
-    treeData: [],
-    loadState: false
   };
+
+
+  treeData: [] = [];
 
   constructor(props: FormProps) {
     super(props);
@@ -27,38 +27,25 @@ class MyTreeSelect extends React.Component<FormProps> {
 
   onLoadData = async () => {
     const { treeData } = this.props;
-    if (!this.state.loadState) {
-      if (treeData && treeData.length > 0) {
-        this.setState({
-          loadState: true,
-          treeData: treeData
-        });
-        return;
-      }
-      await queryList().then(data => {
-        let queryData: TableListItem[] = data;
-        let tempData = queryData.map(item => (
-          {
-            value: item.id,
-            title: item.categoryName,
-            parent: item.parentId
-          }
-        ));
-        let treeData: [] = new JsTreeList.ListToTree(tempData, {
-          key_id: "value",
-          key_parent: "parent",
-          key_child: "children",
-        }).GetTree();
-        this.setState({
-          loadState: true,
-          treeData: treeData
-        });
-      }).catch(err => {
-        this.setState({
-          loadState: false,
-        });
-      });
+    if (treeData && treeData.length > 0) {
+      this.treeData = treeData;
+      return;
     }
+    await queryList().then(data => {
+      let queryData: TableListItem[] = data;
+      let tempData = queryData.map(item => (
+        {
+          value: item.id,
+          title: item.categoryName,
+          parent: item.parentId
+        }
+      ));
+      this.treeData = new JsTreeList.ListToTree(tempData, {
+        key_id: "value",
+        key_parent: "parent",
+        key_child: "children",
+      }).GetTree();
+    });
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -75,8 +62,6 @@ class MyTreeSelect extends React.Component<FormProps> {
     console.log(changedValue);
     this.setState({
       value: changedValue,
-      treeData: this.state.treeData,
-      loadState: this.state.loadState
     });
     this.triggerChange(changedValue);
   }
@@ -92,7 +77,7 @@ class MyTreeSelect extends React.Component<FormProps> {
         style={{ width: "100%" }}
         placeholder="父级类别"
         value={this.state.value}
-        treeData={this.state.treeData}
+        treeData={this.treeData}
         onChange={this.handleChange}
         allowClear />
     );
