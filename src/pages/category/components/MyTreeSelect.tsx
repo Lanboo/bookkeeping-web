@@ -3,18 +3,38 @@ import { TreeSelect } from "antd";
 import { queryList } from './../service';
 import { TableListItem } from '../data.d';
 import JsTreeList from "js-tree-list";
+import { FormComponentProps } from '@ant-design/compatible/es/form';
+
+
+interface FormProps extends FormComponentProps {
+  treeData?: [];
+}
 
 
 
-class MyTreeSelect extends React.Component {
+class MyTreeSelect extends React.Component<FormProps> {
   state = {
     value: undefined,
     treeData: [],
     loadState: false
   };
 
+  constructor(props: FormProps) {
+    super(props);
+
+    this.onLoadData();
+  }
+
   onLoadData = async () => {
+    const { treeData } = this.props;
     if (!this.state.loadState) {
+      if (treeData && treeData.length > 0) {
+        this.setState({
+          loadState: true,
+          treeData: treeData
+        });
+        return;
+      }
       await queryList().then(data => {
         let queryData: TableListItem[] = data;
         let tempData = queryData.map(item => (
@@ -28,7 +48,7 @@ class MyTreeSelect extends React.Component {
           key_id: "value",
           key_parent: "parent",
           key_child: "children",
-        }).GetTree()
+        }).GetTree();
         this.setState({
           loadState: true,
           treeData: treeData
@@ -71,7 +91,6 @@ class MyTreeSelect extends React.Component {
       <TreeSelect
         style={{ width: "100%" }}
         placeholder="父级类别"
-        onDropdownVisibleChange={this.onLoadData}
         value={this.state.value}
         treeData={this.state.treeData}
         onChange={this.handleChange}

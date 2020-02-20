@@ -49,7 +49,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
   }
 
   render() {
-    const { updateModalVisible, onSubmit: handleUpdate, onCancel, form } = this.props;
+    const { updateModalVisible, onSubmit: handleUpdate, onCancel, form, treeData } = this.props;
     const { formVals } = this.state;
 
     const okHandle = () => {
@@ -80,7 +80,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
           {form.getFieldDecorator('parentId', {
             initialValue: formVals.parentId,
           })
-            (<MyTreeSelect />)
+            (<MyTreeSelect treeData={treeData} />)
           }
         </FormItem>
         <FormItem key="categoryName" {...this.formLayout} label="类别名称">

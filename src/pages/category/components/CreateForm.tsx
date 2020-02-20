@@ -12,11 +12,11 @@ interface CreateFormProps extends FormComponentProps {
   modalVisible: boolean;
   onSubmit: (fieldsValue: { id: number }) => void;
   onCancel: () => void;
-  treeData?:[];
+  treeData?: [];
 }
 
 const CreateForm: React.FC<CreateFormProps> = props => {
-  const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
+  const { modalVisible, form, onSubmit: handleAdd, onCancel, treeData } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -37,7 +37,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="父级类别">
         {form.getFieldDecorator('parentId', {
         })
-          (<MyTreeSelect />)
+          (<MyTreeSelect treeData={treeData} />)
         }
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类别名称">
