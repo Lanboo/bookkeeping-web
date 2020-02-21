@@ -22,11 +22,11 @@ export interface TableListData {
 export interface TableListParams {
   id?: number;
   userCode?: string;
-  categoryName: string;
-  parentId: number;
+  categoryName?: string;
+  parentId?: number;
   crtTime?: Date;
   uptTime?: Date;
-  children: TableListItem[];
+  children?: TableListItem[];
   pageSize?: number;
   current?: number;
 }

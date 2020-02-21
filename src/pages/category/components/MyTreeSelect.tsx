@@ -1,21 +1,24 @@
-import React from "react";
-import { TreeSelect } from "antd";
-import { queryList } from './../service';
+import React from 'react';
+import { TreeSelect } from 'antd';
+import JsTreeList from 'js-tree-list';
+
 import { TableListItem } from '../data.d';
-import JsTreeList from "js-tree-list";
-import { FormComponentProps } from '@ant-design/compatible/es/form';
+import { queryList } from '../service';
 
-
-interface FormProps extends FormComponentProps {
+interface FormProps {
   treeData?: [];
+  onChange?: (value: String) => void;
+  treeDefaultExpandAll?: boolean;
 }
 
-
 class MyTreeSelect extends React.Component<FormProps> {
+  static defaultProps = {
+    treeDefaultExpandAll: true,
+  };
+
   state = {
     value: undefined,
   };
-
 
   treeData: [] = [];
 
@@ -32,60 +35,61 @@ class MyTreeSelect extends React.Component<FormProps> {
       return;
     }
     await queryList().then(data => {
-      let queryData: TableListItem[] = data;
-      let tempData = queryData.map(item => (
-        {
-          value: item.id,
-          title: item.categoryName,
-          parent: item.parentId
-        }
-      ));
+      const queryData: TableListItem[] = data;
+      const tempData = queryData.map(item => ({
+        value: item.id,
+        title: item.categoryName,
+        parent: item.parentId,
+      }));
       this.treeData = new JsTreeList.ListToTree(tempData, {
-        key_id: "value",
-        key_parent: "parent",
-        key_child: "children",
+        key_id: 'value',
+        key_parent: 'parent',
+        key_child: 'children',
       }).GetTree();
     });
-  }
+  };
 
-  static getDerivedStateFromProps(nextProps) {
+  static getDerivedStateFromProps(nextProps: any) {
     // Should be a controlled component.
-    if ("value" in nextProps) {
+    if ('value' in nextProps) {
       return {
-        value: nextProps.value
+        value: nextProps.value,
       };
     }
     return null;
   }
 
   handleChange = (changedValue: String) => {
-    console.log(changedValue);
     this.setState({
       value: changedValue,
     });
     this.triggerChange(changedValue);
-  }
+  };
 
   triggerChange = (changedValue: String) => {
     const { onChange } = this.props;
-    onChange && onChange(changedValue);
+    if (onChange) {
+      onChange(changedValue);
+    }
   };
 
   render() {
+    const { treeData, treeDefaultExpandAll } = this.props;
     return (
       <TreeSelect
-        style={{ width: "100%" }}
+        style={{ width: '100%' }}
         placeholder="父级类别"
         value={this.state.value}
-        treeData={this.treeData}
+        treeData={treeData}
+        treeDefaultExpandAll={treeDefaultExpandAll}
         onChange={this.handleChange}
-        allowClear />
+        allowClear
+      />
     );
   }
 }
 
 export default MyTreeSelect;
-
 
 // 不能是函数式组件
 // export default () => (

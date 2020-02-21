@@ -2,26 +2,26 @@ import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Button, Divider, message, Modal } from 'antd';
-import React, { useState, useRef, Component } from 'react';
+import JsTreeList from 'js-tree-list';
+import React, { useState, useRef } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType, RequestData } from '@ant-design/pro-table';
 import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
+import 'antd/dist/antd.css';
+
+import { TableListItem } from './data.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
-import { TableListItem } from './data.d';
 import { query, queryList, update, save, remove } from './service';
-import 'antd/dist/antd.css';
 import MyTreeSelect from './components/MyTreeSelect';
-import JsTreeList from "js-tree-list";
 
-interface TableListProps extends FormComponentProps {
-}
+interface TableListProps extends FormComponentProps {}
+
 /**
  * 添加节点
  * @param fields
  */
-
 const handleAdd = async (fields: FormValueType) => {
   const hide = message.loading('正在添加');
   try {
@@ -65,8 +65,11 @@ const handleUpdate = async (fields: FormValueType) => {
  *  删除节点
  * @param selectedRows
  */
-const handleRemove = (selectedRows: TableListItem[], action: UseFetchDataAction<RequestData<TableListItem>>) => {
-  if (!selectedRows || selectedRows.length == 0) return true;
+const handleRemove = (
+  selectedRows: TableListItem[] | undefined,
+  action: UseFetchDataAction<RequestData<TableListItem>>,
+) => {
+  if (!selectedRows || selectedRows.length === 0) return true;
 
   try {
     Modal.confirm({
@@ -79,7 +82,7 @@ const handleRemove = (selectedRows: TableListItem[], action: UseFetchDataAction<
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() { },
+      onCancel() {},
     });
     return true;
   } catch (error) {
@@ -90,24 +93,27 @@ const handleRemove = (selectedRows: TableListItem[], action: UseFetchDataAction<
 
 let treeData: [] = [];
 
+const treeDataEnum: Map<number, {}> = new Map();
+
 const onLoadData = async () => {
   await queryList().then(data => {
-    let queryData: TableListItem[] = data;
-    let tempData = queryData.map(item => (
-      {
-        value: item.id,
-        title: item.categoryName,
-        parent: item.parentId
-      }
-    ));
-    let treeDataTemp: [] = new JsTreeList.ListToTree(tempData, {
-      key_id: "value",
-      key_parent: "parent",
-      key_child: "children",
+    const queryData: TableListItem[] = data;
+    const tempData = queryData.map(item => ({
+      value: item.id,
+      title: item.categoryName,
+      parent: item.parentId,
+    }));
+    const treeDataTemp: [] = new JsTreeList.ListToTree(tempData, {
+      key_id: 'value',
+      key_parent: 'parent',
+      key_child: 'children',
     }).GetTree();
     treeData = treeDataTemp;
+    queryData.forEach(record => {
+      treeDataEnum[record.id] = { text: record.categoryName, status: 'Default' };
+    });
   });
-}
+};
 
 onLoadData();
 
@@ -134,9 +140,8 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '父级类型',
       dataIndex: 'parentId',
-      renderFormItem: () => {
-        return <MyTreeSelect treeData={treeData} />;
-      },
+      valueEnum: { ...treeDataEnum },
+      renderFormItem: () => <MyTreeSelect treeData={treeData} />,
       ellipsis: true,
     },
     {
@@ -169,7 +174,7 @@ const TableList: React.FC<TableListProps> = () => {
           </a>
           <Divider type="vertical" />
           <a
-            onClick={e => {
+            onClick={() => {
               handleRemove([record], action);
             }}
           >
@@ -205,17 +210,15 @@ const TableList: React.FC<TableListProps> = () => {
         tableAlertRender={() => false}
         request={params => query(params)}
         columns={columns}
-        onLoad={(data) => { }}
-        // rowSelection={{
-        //   onChange: (_selectedRowKeys, selectedRows) => {
-        //     if (selectedRows && selectedRows.length > 0) {
-        //       deleteBtnState.disabled = false;
-        //     } else {
-        //       deleteBtnState.disabled = true;
-        //     }
-        //   },
-        // }}
-        rowSelection={{}}
+        rowSelection={{
+          onChange: (_selectedRowKeys, selectedRows) => {
+            if (selectedRows && selectedRows.length > 0) {
+              deleteBtnState.disabled = false;
+            } else {
+              deleteBtnState.disabled = true;
+            }
+          },
+        }}
         pagination={false}
       />
       <CreateForm

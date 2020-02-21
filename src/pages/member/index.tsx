@@ -7,14 +7,14 @@ import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType, RequestData } from '@ant-design/pro-table';
 import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
-import CreateForm from './components/CreateForm';
-import UpdateForm, { FormValueType } from './components/UpdateForm';
-import { TableListItem } from './data.d';
-import { query, update, save, remove } from './service';
 import 'antd/dist/antd.css';
 
-interface TableListProps extends FormComponentProps { }
+import { TableListItem } from './data.d';
+import CreateForm from './components/CreateForm';
+import UpdateForm, { FormValueType } from './components/UpdateForm';
+import { query, update, save, remove } from './service';
 
+interface TableListProps extends FormComponentProps {}
 
 /**
  * 添加节点
@@ -62,8 +62,11 @@ const handleUpdate = async (fields: FormValueType) => {
  *  删除节点
  * @param selectedRows
  */
-const handleRemove = (selectedRows: TableListItem[], action: UseFetchDataAction<RequestData<TableListItem>>) => {
-  if (!selectedRows || selectedRows.length == 0) return true;
+const handleRemove = (
+  selectedRows: TableListItem[] | undefined,
+  action: UseFetchDataAction<RequestData<TableListItem>>,
+) => {
+  if (!selectedRows || selectedRows.length === 0) return true;
   try {
     Modal.confirm({
       title: '确认删除?',
@@ -75,7 +78,7 @@ const handleRemove = (selectedRows: TableListItem[], action: UseFetchDataAction<
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() { },
+      onCancel() {},
     });
     return true;
   } catch (error) {
@@ -134,15 +137,16 @@ const TableList: React.FC<TableListProps> = () => {
           </a>
           <Divider type="vertical" />
           <a
-            onClick={e => {
+            onClick={() => {
               handleRemove([record], action);
             }}
-          >删除</a>
+          >
+            删除
+          </a>
         </>
       ),
     },
   ];
-
 
   const deleteBtnState = { disabled: true };
 
@@ -155,33 +159,34 @@ const TableList: React.FC<TableListProps> = () => {
           <Button icon={<PlusOutlined />} type="primary" onClick={() => handleModalVisible(true)}>
             新建
           </Button>,
-          <Button icon={<DeleteFilled />} type="danger" disabled={deleteBtnState.disabled} onClick={() => {
-            handleRemove(selectedRows, action);
-          }}>
+          <Button
+            icon={<DeleteFilled />}
+            type="danger"
+            disabled={deleteBtnState.disabled}
+            onClick={() => {
+              handleRemove(selectedRows, action);
+            }}
+          >
             删除
           </Button>,
         ]}
-        tableAlertRender={() => (
-          false
-        )}
-        request={params => (query(params))}
+        tableAlertRender={() => false}
+        request={params => query(params)}
         columns={columns}
         rowSelection={{
           onChange: (_selectedRowKeys, selectedRows) => {
             if (selectedRows && selectedRows.length > 0) {
               deleteBtnState.disabled = false;
-            }
-            else {
+            } else {
               deleteBtnState.disabled = true;
             }
-          }
+          },
         }}
         pagination={{
           defaultPageSize: 10,
           showSizeChanger: true,
           pageSizeOptions: ['10', '20', '30', '50'],
-        }
-        }
+        }}
       />
       <CreateForm
         onSubmit={async value => {
