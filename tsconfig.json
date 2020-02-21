@@ -32,5 +32,8 @@
     "src/setupTests.ts",
     "tslint:latest",
     "tslint-config-prettier"
-  ]
+  ],
+  // TypeScript 引入 第三方包找不到无法找到模块
+  // https://www.jianshu.com/p/35742227738e
+  "include": ["src", "typings"]
 }
