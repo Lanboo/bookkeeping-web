@@ -13,6 +13,7 @@ export default {
   'menu.book':'Book Management',
   'menu.member':'Member Management',
   'menu.category':'Category Management',
+  'menu.asset':'Personal Asset',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',

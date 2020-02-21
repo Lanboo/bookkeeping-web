@@ -137,6 +137,12 @@ export default {
               component: './category',
             },
             {
+              name: 'asset',
+              icon: 'control',
+              path: '/asset',
+              component: './asset',
+            },
+            {
               component: './404',
             },
           ],
