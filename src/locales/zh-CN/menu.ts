@@ -14,6 +14,8 @@ export default {
   'menu.member':'成员管理',
   'menu.category':'类别管理',
   'menu.asset':'资产管理',
+  'menu.alipay':'支付宝',
+  'menu.alipay.record':'支付宝账单',
 
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',

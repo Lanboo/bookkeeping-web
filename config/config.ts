@@ -32,11 +32,11 @@ const plugins: IPlugin[] = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -143,6 +143,18 @@ export default {
               component: './asset',
             },
             {
+              name: 'alipay',
+              icon: 'alipay',
+              routes: [
+                {
+                  name: 'record',
+                  icon: 'bars',
+                  path: '/alipay/record',
+                  component: './alipay/record',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],
@@ -205,7 +217,7 @@ export default {
   }, // chainWebpack: webpackPlugin,
   proxy: {
     '/api': {
-      target :'http://localhost:8080',
+      target: 'http://localhost:8080',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

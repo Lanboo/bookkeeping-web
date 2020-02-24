@@ -14,6 +14,8 @@ export default {
   'menu.member':'Member Management',
   'menu.category':'Category Management',
   'menu.asset':'Personal Asset',
+  'menu.alipay':'Alipay',
+  'menu.alipay.record':'Alipay Record',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',
