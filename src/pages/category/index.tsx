@@ -142,7 +142,6 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'parentId',
       valueEnum: { ...treeDataEnum },
       renderFormItem: () => <MyTreeSelect treeData={treeData} />,
-      ellipsis: true,
     },
     {
       title: '创建时间',
