@@ -13,6 +13,7 @@ export interface TableListItem {
   fundToolFrom: string;
   memo: string;
 
+  consumeTimeStart?: Date;
   consumeTimeEnd?: Date;
   consumeTimeArray?: Date[];
 
@@ -46,6 +47,7 @@ export interface TableListParams {
   fundToolFrom?: string;
   memo?: string;
 
+  consumeTimeStart?: Date;
   consumeTimeEnd?: Date;
   consumeTimeArray?: Date[];
 

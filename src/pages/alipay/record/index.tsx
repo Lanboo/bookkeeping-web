@@ -17,7 +17,7 @@ import { query, update, save, remove } from './service';
 
 const { RangePicker } = DatePicker;
 
-interface TableListProps extends FormComponentProps {}
+interface TableListProps extends FormComponentProps { }
 
 /**
  * 添加节点
@@ -101,7 +101,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() {},
+      onCancel() { },
     });
     return true;
   } catch (error) {
@@ -132,19 +132,23 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'consumeTimeArray',
       valueType: 'dateTime',
       hideInTable: true,
-      renderFormItem: () => (
-        <RangePicker
-          showTime={{
-            format: 'HH:mm:ss',
-            defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-          }}
-          ranges={{
-            Today: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-          }}
-          format="YYYY-MM-DD HH:mm:ss"
-          placeholder={['Start Time', 'End Time']}
-        />
-      ),
+      renderFormItem: (_item: ProColumns<TableListItem>, config: {
+        onChange?: (value: any) => void;
+      }) => (
+          <RangePicker
+            style={{ width: '100%' }}
+            showTime={{
+              format: 'HH:mm:ss',
+              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+            }}
+            ranges={{
+              Today: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+            }}
+            format="YYYY-MM-DD HH:mm:ss"
+            placeholder={['Start Time', 'End Time']}
+            onChange={(value: any) => config.onChange(value)}
+          />
+        ),
     },
     {
       title: '消费标题',
@@ -153,7 +157,7 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: (
         <span>
-          流水号 <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>商户订单号</span>
+          流水号 <span style={{ color: 'rgba(0, 0, 0, 0.4)' }}>商户订单号</span>
         </span>
       ),
       dataIndex: 'tradeId',
@@ -162,7 +166,7 @@ const TableList: React.FC<TableListProps> = () => {
         <span>
           {text}
           <br />
-          <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>{record.tradeNo}</span>
+          <span style={{ color: 'rgba(0, 0, 0, 0.4)' }}>{record.tradeNo}</span>
         </span>
       ),
     },
@@ -175,9 +179,7 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'amount',
       valueType: 'money',
       hideInSearch: true,
-      renderText: (text: number) => {
-        return text / 100 + '';
-      },
+      renderText: (text: number) => text / 100 + '',
     },
     {
       title: '资金流向',
@@ -290,6 +292,14 @@ const TableList: React.FC<TableListProps> = () => {
           },
         }}
         search={{ span: 6 }}
+        beforeSearchSubmit={params => {
+          if (params.consumeTimeArray && params.consumeTimeArray.length >= 2) {
+            params.consumeTimeStart = params.consumeTimeArray[0];
+            params.consumeTimeEnd = params.consumeTimeArray[1];
+            params.consumeTimeArray = undefined;
+          }
+          return params;
+        }}
         pagination={{
           defaultPageSize: 10,
           showSizeChanger: true,
