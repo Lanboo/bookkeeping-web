@@ -1,7 +1,8 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Button, Divider, message, Modal, InputNumber } from 'antd';
+import { Button, Divider, message, Modal, DatePicker } from 'antd';
+import moment from 'moment';
 import React, { useState, useRef } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -14,7 +15,9 @@ import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { query, update, save, remove } from './service';
 
-interface TableListProps extends FormComponentProps { }
+const { RangePicker } = DatePicker;
+
+interface TableListProps extends FormComponentProps {}
 
 /**
  * 添加节点
@@ -98,7 +101,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() { },
+      onCancel() {},
     });
     return true;
   } catch (error) {
@@ -119,33 +122,47 @@ const TableList: React.FC<TableListProps> = () => {
       hideInSearch: true,
     },
     {
-      title: '用户名称',
-      dataIndex: 'userCode',
+      title: '消费时间',
+      dataIndex: 'consumeTime',
+      valueType: 'dateTime',
       hideInSearch: true,
     },
     {
       title: '消费时间',
-      dataIndex: 'consumeTime',
-      valueType: 'dateTime',
-    },
-    {
-      title: '',
-      dataIndex: 'consumeTimeEnd',
+      dataIndex: 'consumeTimeArray',
       valueType: 'dateTime',
       hideInTable: true,
+      renderFormItem: () => (
+        <RangePicker
+          showTime={{
+            format: 'HH:mm:ss',
+            defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+          }}
+          ranges={{
+            Today: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+          }}
+          format="YYYY-MM-DD HH:mm:ss"
+          placeholder={['Start Time', 'End Time']}
+        />
+      ),
     },
     {
       title: '消费标题',
       dataIndex: 'consumeTitle',
     },
     {
-      title: <span>流水号 <span style={{ color: "rgba(0, 0, 0, 0.3)" }}>商户订单号</span></span>,
+      title: (
+        <span>
+          流水号 <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>商户订单号</span>
+        </span>
+      ),
       dataIndex: 'tradeId',
       hideInSearch: true,
       render: (text, record) => (
         <span>
-          {text}<br />
-          <span style={{ color: "rgba(0, 0, 0, 0.3)" }}>{record.tradeNo}</span>
+          {text}
+          <br />
+          <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>{record.tradeNo}</span>
         </span>
       ),
     },
@@ -158,13 +175,15 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'amount',
       valueType: 'money',
       hideInSearch: true,
-      renderText: text => ("" + text / 100),
+      renderText: (text: number) => {
+        return text / 100 + '';
+      },
     },
     {
       title: '资金流向',
       dataIndex: 'fundFlow',
       formItemProps: {
-        allowClear: "allowClear",
+        allowClear: 'allowClear',
       },
       valueEnum: {
         '1': { text: '收入', status: 'Success' },
@@ -270,9 +289,7 @@ const TableList: React.FC<TableListProps> = () => {
             }
           },
         }}
-        search={
-          { span: 3, }
-        }
+        search={{ span: 6 }}
         pagination={{
           defaultPageSize: 10,
           showSizeChanger: true,
