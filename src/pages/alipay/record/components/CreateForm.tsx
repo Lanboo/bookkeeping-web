@@ -28,6 +28,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
     form.validateFields((err, fieldsValue: TableListItem) => {
       if (err) return;
       form.resetFields();
+      fieldsValue.consumeTime = moment(fieldsValue.consumeTime).format('YYYY-MM-DD HH:mm:ss');
       fieldsValue.amount = fieldsValue.amount * 100;
       handleAdd(fieldsValue);
     });
@@ -42,18 +43,18 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       onOk={okHandle}
       onCancel={() => onCancel()}
     >
-      <Form {...formLayout} >
+      <Form {...formLayout}>
         <Row>
           <Col span={12}>
             <FormItem label="消费时间">
               {form.getFieldDecorator('consumeTime', {
-                rules: [{ type: 'object', required: true, message: '不能为空！', min: 1 }],
-                initialValue: moment()
+                rules: [{ type: 'object', required: true, message: '不能为空！' }],
+                initialValue: moment(),
               })(
                 <DatePicker
                   style={{ width: '100%' }}
                   showTime={{
-                    format: 'HH:mm:ss',
+                    format: 'YYYY-MM-DD HH:mm:ss',
                   }}
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder="消费时间"
@@ -96,17 +97,11 @@ const CreateForm: React.FC<CreateFormProps> = props => {
             </FormItem>
           </Col>
           <Col span={12}>
-            <FormItem label="金额">
-              {form.getFieldDecorator('amount', {
+            <FormItem label="状态">
+              {form.getFieldDecorator('status', {
                 rules: [{ required: true, message: '不能为空！', min: 1 }],
-                initialValue: '0',
               })(
-                <InputNumber
-                  placeholder="消费金额"
-                  style={{ width: '100%' }}
-                  min={0}
-                  precision={2}
-                />
+                <Input placeholder="状态" allowClear />
               )}
             </FormItem>
           </Col>
@@ -127,11 +122,17 @@ const CreateForm: React.FC<CreateFormProps> = props => {
             </FormItem>
           </Col>
           <Col span={12}>
-            <FormItem label="状态">
-              {form.getFieldDecorator('status', {
-                rules: [{ required: true, message: '不能为空！', min: 1 }],
+            <FormItem label="金额">
+              {form.getFieldDecorator('amount', {
+                rules: [{ type: 'number', required: true, message: '不能为空！', min: 0 }],
+                initialValue: 0,
               })(
-                <Input placeholder="状态" allowClear />
+                <InputNumber
+                  placeholder="消费金额"
+                  style={{ width: '100%' }}
+                  min={0}
+                  precision={2}
+                />
               )}
             </FormItem>
           </Col>

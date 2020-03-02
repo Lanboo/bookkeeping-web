@@ -1,7 +1,7 @@
 export interface TableListItem {
   id: number;
   userCode: string;
-  consumeTime: Date;
+  consumeTime: string;
   consumeTitle: string;
   tradeNo: string;
   tradeId: string;
@@ -13,9 +13,9 @@ export interface TableListItem {
   fundToolFrom: string;
   memo: string;
 
-  consumeTimeStart?: Date;
-  consumeTimeEnd?: Date;
-  consumeTimeArray?: Date[];
+  consumeTimeStart?: string;
+  consumeTimeEnd?: string;
+  consumeTimeArray?: string[];
 
   crtTime: Date;
   uptTime: Date;
@@ -35,7 +35,7 @@ export interface TableListData {
 export interface TableListParams {
   id?: number;
   userCode?: string;
-  consumeTime?: Date;
+  consumeTime?: string;
   consumeTitle?: string;
   tradeNo?: string;
   tradeId?: string;
@@ -47,9 +47,9 @@ export interface TableListParams {
   fundToolFrom?: string;
   memo?: string;
 
-  consumeTimeStart?: Date;
-  consumeTimeEnd?: Date;
-  consumeTimeArray?: Date[];
+  consumeTimeStart?: string;
+  consumeTimeEnd?: string;
+  consumeTimeArray?: string[];
 
   pageSize?: number;
   current?: number;
