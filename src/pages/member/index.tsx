@@ -71,9 +71,9 @@ const handleRemove = (
     Modal.confirm({
       title: '确认删除?',
       okType: 'danger',
-      onOk() {
+      async onOk() {
         const hide = message.loading('正在删除');
-        remove(selectedRows.map(row => row.id));
+        await remove(selectedRows.map(row => row.id));
         hide();
         message.success('删除成功，即将刷新');
         action.reload();
