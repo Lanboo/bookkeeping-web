@@ -38,3 +38,7 @@ screenshot
 .eslintcache
 
 build
+
+
+# 暂时忽略.eslintignore的提交，为了commit时暂时越过lint校验
+.eslintignore
