@@ -17,6 +17,8 @@ export interface TableListItem {
   consumeTimeEnd?: string;
   consumeTimeArray?: string[];
 
+  operator: String;
+
   crtTime: Date;
   uptTime: Date;
 }
@@ -50,6 +52,8 @@ export interface TableListParams {
   consumeTimeStart?: string;
   consumeTimeEnd?: string;
   consumeTimeArray?: string[];
+
+  operator?: String;
 
   pageSize?: number;
   current?: number;
