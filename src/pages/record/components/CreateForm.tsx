@@ -1,6 +1,6 @@
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, Select, InputNumber, DatePicker, Row, Col } from 'antd';
+import { Input, Modal, Select, InputNumber, DatePicker, Row, Col, TreeSelect } from 'antd';
 import moment from 'moment';
 
 import { FormComponentProps } from '@ant-design/compatible/es/form';
@@ -42,12 +42,14 @@ const CreateForm: React.FC<CreateFormProps> = props => {
     selectData.bookSelDate.map(book => (
       <Select.Option value={book.id}>{book.bookName}</Select.Option>
     ));
+
   const assetOptions =
     selectData &&
     selectData.assetDate &&
     selectData.assetDate.map(asset => (
       <Select.Option value={asset.id}>{asset.assetName}</Select.Option>
     ));
+
   const memberOptions =
     selectData &&
     selectData.memberSelDate &&
@@ -127,7 +129,15 @@ const CreateForm: React.FC<CreateFormProps> = props => {
             <FormItem label="分类">
               {form.getFieldDecorator('category', {
                 rules: [{ required: true, message: '不能为空！' }],
-              })(<Input placeholder="分类" allowClear />)}
+              })(
+                <TreeSelect
+                  style={{ width: '100%' }}
+                  placeholder="类别"
+                  treeData={selectData!.categorySelDate}
+                  treeDefaultExpandAll={true}
+                  allowClear
+                />,
+              )}
             </FormItem>
           </Col>
           <Col span={12}>

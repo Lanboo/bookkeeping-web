@@ -17,7 +17,7 @@ export interface SelectDataEnum {
 
 export interface SelectData {
   bookSelDate?: Book[];
-  categorySelDate?: Category[];
+  categorySelDate?: {}[];
   assetDate?: Asset[];
   memberSelDate?: Member[];
 }
@@ -39,7 +39,18 @@ export function loadSelectData() {
     selectDataEnum.selectData.bookSelDate = data;
   });
   categoryQuery().then(data => {
-    selectDataEnum.selectData.categorySelDate = data;
+    const queryData: Category[] = data;
+    const tempData = queryData.map(item => ({
+      value: item.id,
+      title: item.categoryName,
+      parent: item.parentId ? item.parentId : null,
+    }));
+    const treeDataTemp = new JsTreeList.ListToTree(tempData, {
+      key_id: 'value',
+      key_parent: 'parent',
+      key_child: 'children',
+    }).GetTree();
+    selectDataEnum.selectData.categorySelDate = treeDataTemp;
   });
   assetQuery().then(data => {
     selectDataEnum.selectData.assetDate = data;
