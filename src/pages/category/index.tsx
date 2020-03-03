@@ -101,7 +101,7 @@ const onLoadData = async () => {
     const tempData = queryData.map(item => ({
       value: item.id,
       title: item.categoryName,
-      parent: item.parentId,
+      parent: item.parentId ? item.parentId : null,
     }));
     const treeDataTemp: [] = new JsTreeList.ListToTree(tempData, {
       key_id: 'value',
