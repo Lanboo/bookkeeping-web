@@ -10,6 +10,15 @@ export async function query(params?: TableListParams) {
   });
 }
 
+export async function queryList(params?: TableListParams) {
+  return request('/api/member/query/list', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 export async function remove(params: number[]) {
   return request('/api/member/remove', {
     method: 'POST',
