@@ -17,7 +17,7 @@ import { query, update, save, remove } from './service';
 
 const { RangePicker } = DatePicker;
 
-interface TableListProps extends FormComponentProps { }
+interface TableListProps extends FormComponentProps {}
 
 /**
  * 添加节点
@@ -101,7 +101,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() { },
+      onCancel() {},
     });
     return true;
   } catch (error) {
@@ -132,25 +132,40 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'consumeTimeArray',
       valueType: 'dateTime',
       hideInTable: true,
-      renderFormItem: (_item: ProColumns<TableListItem>, config: {
-        onChange?: (value: any) => void;
-      }) => (
-          <RangePicker
-            style={{ width: '100%' }}
-            showTime={{
-              format: 'HH:mm:ss',
-              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-            }}
-            ranges={{
-              '今天': [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-            }}
-            format="YYYY-MM-DD HH:mm:ss"
-            placeholder={['Start Time', 'End Time']}
-            onChange={(value: any) => {
-              config.onChange(value);
-            }}
-          />
-        ),
+      renderFormItem: (
+        _item: ProColumns<TableListItem>,
+        config: {
+          onChange?: (value: any) => void;
+        },
+      ) => (
+        <RangePicker
+          style={{ width: '100%' }}
+          showTime={{
+            format: 'HH:mm:ss',
+            defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+          }}
+          ranges={{
+            今天: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+            昨天: [
+              moment('00:00:00', 'HH:mm:ss').add(-1, 'days'),
+              moment('23:59:59', 'HH:mm:ss').add(-1, 'days'),
+            ],
+            最近7天: [
+              moment('00:00:00', 'HH:mm:ss').add(-7, 'days'),
+              moment('23:59:59', 'HH:mm:ss'),
+            ],
+            最近一个月: [
+              moment('00:00:00', 'HH:mm:ss').add(-1, 'month'),
+              moment('23:59:59', 'HH:mm:ss'),
+            ],
+          }}
+          format="YYYY-MM-DD HH:mm:ss"
+          placeholder={['Start Time', 'End Time']}
+          onChange={(value: any) => {
+            config.onChange(value);
+          }}
+        />
+      ),
     },
     {
       title: '消费标题',
