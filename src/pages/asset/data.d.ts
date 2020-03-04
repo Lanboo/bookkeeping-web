@@ -4,6 +4,7 @@ export interface TableListItem {
   assetName: string;
   assetPattern: string;
   assetType: string;
+  initialAmount: number;
   balance: number;
 
   crtTime: Date;
@@ -27,6 +28,7 @@ export interface TableListParams {
   assetName?: string;
   assetPattern?: string;
   assetType?: string;
+  initialAmount?: number;
   balance?: number;
 
   pageSize?: number;

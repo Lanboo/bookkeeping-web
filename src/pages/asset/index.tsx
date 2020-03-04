@@ -1,4 +1,4 @@
-import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
+import { DeleteFilled, PlusOutlined, SwapOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Button, Divider, message, Modal, InputNumber } from 'antd';
@@ -14,7 +14,7 @@ import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { query, update, save, remove } from './service';
 
-interface TableListProps extends FormComponentProps { }
+interface TableListProps extends FormComponentProps {}
 
 /**
  * 添加节点
@@ -27,6 +27,7 @@ const handleAdd = async (fields: FormValueType) => {
       assetName: fields.assetName,
       assetPattern: fields.assetPattern,
       assetType: fields.assetType,
+      initialAmount: fields.initialAmount,
       balance: fields.balance,
     });
     hide();
@@ -50,6 +51,7 @@ const handleUpdate = async (fields: FormValueType) => {
       assetName: fields.assetName,
       assetPattern: fields.assetPattern,
       assetType: fields.assetType,
+      initialAmount: fields.initialAmount,
       balance: fields.balance,
       id: fields.id,
     });
@@ -84,7 +86,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() { },
+      onCancel() {},
     });
     return true;
   } catch (error) {
@@ -117,11 +119,11 @@ const TableList: React.FC<TableListProps> = () => {
       title: '资产模式',
       dataIndex: 'assetPattern',
       formItemProps: {
-        allowClear: "allowClear",
+        allowClear: 'allowClear',
       },
       valueEnum: {
         0: { text: '资产账户', status: 'Success' },
-        1: { text: '负债账户', status: 'Error' }
+        1: { text: '负债账户', status: 'Error' },
       },
     },
     {
@@ -133,16 +135,16 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'balance',
       valueType: 'money',
       hideInSearch: true,
-      renderText: text => ("" + text / 100),
-      renderFormItem: () => (
-        <InputNumber
-          style={{ width: '100%' }}
-          min={0}
-          precision={2}
-        // formatter={value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-        // parser={value => value.replace(/\$\s?|(,*)/g, '')}
-        />
-      ),
+      renderText: text => '' + text / 100,
+      renderFormItem: () => <InputNumber style={{ width: '100%' }} min={0} precision={2} />,
+    },
+    {
+      title: '初始金额',
+      dataIndex: 'initialAmount',
+      valueType: 'money',
+      hideInSearch: true,
+      renderText: text => '' + text / 100,
+      renderFormItem: () => <InputNumber style={{ width: '100%' }} min={0} precision={2} />,
     },
     {
       title: '创建时间',
@@ -193,6 +195,9 @@ const TableList: React.FC<TableListProps> = () => {
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={(action, { selectedRows }) => [
+          <Button icon={<SwapOutlined />} type="primary">
+            转账
+          </Button>,
           <Button icon={<PlusOutlined />} type="primary" onClick={() => handleModalVisible(true)}>
             新建
           </Button>,
@@ -219,9 +224,7 @@ const TableList: React.FC<TableListProps> = () => {
             }
           },
         }}
-        search={
-          { span: 4, }
-        }
+        search={{ span: 4 }}
         pagination={{
           defaultPageSize: 10,
           showSizeChanger: true,

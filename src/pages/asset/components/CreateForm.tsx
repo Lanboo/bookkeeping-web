@@ -14,7 +14,6 @@ interface CreateFormProps extends FormComponentProps {
   onCancel: () => void;
 }
 
-
 const formLayout = {
   labelCol: { span: 7 },
   wrapperCol: { span: 13 },
@@ -26,7 +25,8 @@ const CreateForm: React.FC<CreateFormProps> = props => {
     form.validateFields((err, fieldsValue: TableListItem) => {
       if (err) return;
       form.resetFields();
-      fieldsValue.balance = fieldsValue.balance * 100;
+      fieldsValue.initialAmount = fieldsValue.initialAmount * 100;
+      fieldsValue.balance = fieldsValue.initialAmount;
       handleAdd(fieldsValue);
     });
   };
@@ -51,7 +51,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
           <Select style={{ width: '100%' }}>
             <Select.Option value="0">资产账户</Select.Option>
             <Select.Option value="1">负债账户</Select.Option>
-          </Select>
+          </Select>,
         )}
       </FormItem>
       <FormItem {...formLayout} label="资产类型">
@@ -59,18 +59,11 @@ const CreateForm: React.FC<CreateFormProps> = props => {
           rules: [{ required: true, message: '不能为空！', min: 1 }],
         })(<Input placeholder="资产类型" allowClear />)}
       </FormItem>
-      <FormItem {...formLayout} label="余额">
-        {form.getFieldDecorator('balance', {
-          rules: [{ required: true, message: '不能为空！', min: 1 }],
+      <FormItem {...formLayout} label="初始金额">
+        {form.getFieldDecorator('initialAmount', {
+          rules: [{ required: true, message: '不能为空！' }],
           initialValue: '0',
-        })(
-          <InputNumber
-            placeholder="初始金额"
-            style={{ width: '100%' }}
-            min={0}
-            precision={2}
-          />
-        )}
+        })(<InputNumber placeholder="初始金额" style={{ width: '100%' }} min={0} precision={2} />)}
       </FormItem>
     </Modal>
   );

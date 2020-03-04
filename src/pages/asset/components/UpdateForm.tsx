@@ -6,8 +6,7 @@ import React, { Component } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { TableListItem } from '../data.d';
 
-export interface FormValueType extends Partial<TableListItem> {
-}
+export interface FormValueType extends Partial<TableListItem> {}
 
 export interface UpdateFormProps extends FormComponentProps {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
@@ -23,8 +22,8 @@ export interface UpdateFormState {
 
 class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
   static defaultProps = {
-    handleUpdate: () => { },
-    handleUpdateModalVisible: () => { },
+    handleUpdate: () => {},
+    handleUpdateModalVisible: () => {},
     values: {},
   };
 
@@ -43,7 +42,8 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
         assetName: props.values.assetName,
         assetPattern: props.values.assetPattern,
         assetType: props.values.assetType,
-        balance: props.values.balance,
+        initialAmount: props.values.initialAmount! / 100,
+        balance: props.values.balance! / 100,
       },
     };
   }
@@ -62,7 +62,9 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
           assetName: fieldsValue.assetName,
           assetPattern: fieldsValue.assetPattern,
           assetType: fieldsValue.assetType,
-          balance: fieldsValue.balance! * 100,
+          initialAmount: fieldsValue.initialAmount! * 100,
+          balance:
+            (formVals.balance! - (formVals.initialAmount! - fieldsValue.initialAmount)) * 100,
         });
       });
     };
@@ -95,7 +97,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
               <Select style={{ width: '100%' }}>
                 <Select value="0">资产账户</Select>
                 <Select value="1">负债账户</Select>
-              </Select>
+              </Select>,
             )}
           </FormItem>
           <FormItem key="assetType" label="资产类型">
@@ -104,18 +106,24 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
               initialValue: formVals.assetType,
             })(<Input placeholder="支付宝" allowClear />)}
           </FormItem>
-          <FormItem key="balance" label="资产名称">
-            {form.getFieldDecorator('balance', {
+          <FormItem key="initialAmount" label="初始金额">
+            {form.getFieldDecorator('initialAmount', {
               rules: [{ required: true, message: '不能为空！' }],
-              initialValue: formVals.balance! / 100,
+              initialValue: formVals.initialAmount,
             })(
               <InputNumber
                 placeholder="初始金额"
                 style={{ width: '100%' }}
                 min={0}
                 precision={2}
-              />
+              />,
             )}
+          </FormItem>
+          <FormItem key="balance" label="余额">
+            {form.getFieldDecorator('balance', {
+              rules: [{ required: true, message: '不能为空！' }],
+              initialValue: formVals.balance,
+            })(<InputNumber disabled placeholder="余额" style={{ width: '100%' }} precision={2} />)}
           </FormItem>
         </Form>
       </Modal>
