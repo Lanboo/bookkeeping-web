@@ -1,7 +1,7 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Button, Divider, message, Modal, DatePicker } from 'antd';
+import { Button, Divider, message, Modal, DatePicker, Tag } from 'antd';
 import moment from 'moment';
 import React, { useState, useRef } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
@@ -172,6 +172,8 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '账本',
       dataIndex: 'accountBook',
+      filters: undefined,
+      valueEnum: { ...selectDataEnum.selectEnum.bookEnum },
     },
     {
       title: '金额',
@@ -183,31 +185,46 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '收/支',
       dataIndex: 'flow',
+      filters: undefined,
       formItemProps: {
         allowClear: 'allowClear',
       },
       valueEnum: {
         '1': { text: '收入', status: 'Success' },
         '-1': { text: '支出', status: 'Error' },
-        '0': { text: '转账', status: 'Default' },
       },
     },
     {
       title: '分类',
       dataIndex: 'category',
+      filters: undefined,
+      valueEnum: { ...selectDataEnum.selectEnum.categoryEnum },
     },
     {
       title: '账户',
       dataIndex: 'asset',
+      filters: undefined,
+      valueEnum: { ...selectDataEnum.selectEnum.assetEnum },
+    },
+    {
+      title: '成员',
+      filters: undefined,
+      dataIndex: 'familyMember',
+      render: (_text, record, _index, _action) => {
+        return record.familyMember
+          .split(',')
+          .map(memberId => (
+            <Tag style={{ marginRight: '4px' }}>
+              {selectDataEnum.selectEnum.memberEnum &&
+                selectDataEnum.selectEnum.memberEnum[memberId]}
+            </Tag>
+          ));
+      },
     },
     {
       title: '备注',
       dataIndex: 'recordDesc',
       hideInSearch: true,
-    },
-    {
-      title: '成员',
-      dataIndex: 'familyMember',
     },
     {
       title: '支付宝账单ID',
