@@ -162,7 +162,7 @@ const TableList: React.FC<TableListProps> = () => {
           format="YYYY-MM-DD HH:mm:ss"
           placeholder={['Start Time', 'End Time']}
           onChange={(value: any) => {
-            config.onChange(value);
+            config.onChange && config.onChange(value);
           }}
         />
       ),
