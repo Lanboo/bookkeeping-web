@@ -119,6 +119,19 @@ export default {
               component: './ListTableList',
             },
             {
+              name: 'base',
+              icon: 'alipay',
+              path: '/base',
+              routes: [
+                {
+                  name: 'dic',
+                  icon: 'bars',
+                  path: '/base/dic',
+                  component: './base/dic',
+                },
+              ],
+            },
+            {
               name: 'book',
               icon: 'book',
               path: '/book',

@@ -10,6 +10,8 @@ export default {
   'menu.exception.not-find': '404',
   'menu.exception.server-error': '500',
 
+  'menu.base': 'Base Data',
+  'menu.base.dic': 'Data Dictionary',
   'menu.book': 'Book Management',
   'menu.member': 'Member Management',
   'menu.category': 'Category Management',

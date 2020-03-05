@@ -10,6 +10,8 @@ export default {
   'menu.exception.not-find': '404',
   'menu.exception.server-error': '500',
 
+  'menu.base': '基础数据',
+  'menu.base.dic': '数据字典',
   'menu.book': '账本管理',
   'menu.member': '成员管理',
   'menu.category': '类别管理',
