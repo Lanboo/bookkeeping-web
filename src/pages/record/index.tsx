@@ -1,7 +1,7 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Button, Divider, message, Modal, DatePicker, Tag } from 'antd';
+import { Button, Divider, message, Modal, DatePicker, Tag, Select, TreeSelect } from 'antd';
 import moment from 'moment';
 import React, { useState, useRef } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
@@ -15,6 +15,7 @@ import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { query, update, save, remove } from './service';
 import { loadSelectData, SelectDataEnum } from './loadSelectData';
+import { TableListItem as Asset } from '../../asset/data';
 
 const { RangePicker } = DatePicker;
 
@@ -112,6 +113,10 @@ const handleRemove = (
 
 const selectDataEnum: SelectDataEnum = loadSelectData();
 
+const memberOptions = selectDataEnum.selectData?.memberData?.map(member => (
+  <Select.Option value={member.id}>{member.memberName}</Select.Option>
+));
+
 const TableList: React.FC<TableListProps> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -131,7 +136,7 @@ const TableList: React.FC<TableListProps> = () => {
     },
     {
       title: '消费时间',
-      dataIndex: 'consumeTimeArray',
+      dataIndex: 'recordTimeArray',
       valueType: 'dateTime',
       hideInTable: true,
       renderFormItem: (
@@ -199,12 +204,47 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'category',
       filters: undefined,
       valueEnum: { ...selectDataEnum.selectEnum.categoryEnum },
+      renderFormItem: () => (
+        <TreeSelect
+          style={{ width: '100%' }}
+          placeholder="类别"
+          treeData={selectDataEnum.selectData!.categoryData}
+          treeDefaultExpandAll={true}
+          allowClear
+        />
+      ),
     },
     {
       title: '账户',
       dataIndex: 'asset',
       filters: undefined,
       valueEnum: { ...selectDataEnum.selectEnum.assetEnum },
+      renderFormItem: () => {
+        let assetOptionGroups: any[] = [];
+
+        if (selectDataEnum.selectData && selectDataEnum.selectData.assetData) {
+          let assetOptionsMap: Map<String, Asset[]> = new Map();
+          selectDataEnum.selectData.assetData.forEach(asset => {
+            if (!assetOptionsMap[asset.assetType]) {
+              assetOptionsMap[asset.assetType] = [];
+            }
+            assetOptionsMap[asset.assetType].push(asset);
+          });
+          for (let assetType in assetOptionsMap) {
+            let assetOptions = assetOptionsMap[assetType].map((asset: Asset) => (
+              <Select.Option value={asset.id}>{asset.assetName}</Select.Option>
+            ));
+            assetOptionGroups.push(
+              <Select.OptGroup label={assetType}>{assetOptions}</Select.OptGroup>,
+            );
+          }
+        }
+        return (
+          <Select allowClear placeholder="账户" style={{ width: '100%' }}>
+            {assetOptionGroups}
+          </Select>
+        );
+      },
     },
     {
       title: '成员',
@@ -220,6 +260,13 @@ const TableList: React.FC<TableListProps> = () => {
             </Tag>
           ));
       },
+      renderFormItem: () => (
+        <Select allowClear style={{ width: '100%' }}>
+          {selectDataEnum.selectData?.memberData?.map(member => (
+            <Select.Option value={member.id}>{member.memberName}</Select.Option>
+          ))}
+        </Select>
+      ),
     },
     {
       title: '备注',
