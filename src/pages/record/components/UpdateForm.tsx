@@ -1,11 +1,13 @@
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, Select, InputNumber, Row, Col, DatePicker } from 'antd';
+import { Input, Modal, Select, InputNumber, Row, Col, DatePicker, Radio, TreeSelect } from 'antd';
 import React, { Component } from 'react';
-
-import { FormComponentProps } from '@ant-design/compatible/es/form';
-import { TableListItem } from '../data.d';
 import moment from 'moment';
+import { FormComponentProps } from '@ant-design/compatible/es/form';
+
+import { TableListItem } from '../data.d';
+import { SelectData } from '../loadSelectData';
+import { TableListItem as Asset } from '../../asset/data';
 
 export interface FormValueType extends Partial<TableListItem> {}
 
@@ -14,6 +16,7 @@ export interface UpdateFormProps extends FormComponentProps {
   onSubmit: (values: FormValueType) => void;
   updateModalVisible: boolean;
   values: Partial<TableListItem>;
+  selectData?: SelectData;
 }
 
 const FormItem = Form.Item;
@@ -42,24 +45,49 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
       formVals: {
         id: props.values.id,
         userCode: props.values.userCode,
-        consumeTime: props.values.consumeTime,
-        consumeTitle: props.values.consumeTitle,
-        tradeNo: props.values.tradeNo,
-        tradeId: props.values.tradeId,
-        other: props.values.other,
+        busiType: props.values.busiType,
+        accountBook: props.values.accountBook,
         amount: props.values.amount! / 100,
-        fundFlow: props.values.fundFlow,
-        status: props.values.status,
-        fundTool: props.values.fundTool,
-        fundToolFrom: props.values.fundToolFrom,
-        memo: props.values.memo,
+        flow: props.values.flow,
+        category: props.values.category,
+        asset: props.values.asset,
+        recordTime: props.values.recordTime,
+        recordDesc: props.values.recordDesc,
+        familyMember: props.values.familyMember,
+        alipayRecordId: props.values.alipayRecordId,
       },
     };
   }
 
   render() {
     const { updateModalVisible, onSubmit: handleUpdate, onCancel, form } = this.props;
+    const { selectData } = this.props;
     const { formVals } = this.state;
+
+    const bookOptions = selectData?.bookData?.map(book => (
+      <Select.Option value={book.id}>{book.bookName}</Select.Option>
+    ));
+
+    const assetOptionGroups: any[] = [];
+    if (selectData && selectData.assetData) {
+      let assetOptionsMap: Map<String, Asset[]> = new Map();
+      selectData.assetData.forEach(asset => {
+        if (!assetOptionsMap[asset.assetType]) {
+          assetOptionsMap[asset.assetType] = [];
+        }
+        assetOptionsMap[asset.assetType].push(asset);
+      });
+      for (let assetType in assetOptionsMap) {
+        let assetOptions = assetOptionsMap[assetType].map((asset: Asset) => (
+          <Select.Option value={asset.id}>{asset.assetName}</Select.Option>
+        ));
+        assetOptionGroups.push(<Select.OptGroup label={assetType}>{assetOptions}</Select.OptGroup>);
+      }
+    }
+
+    const memberOptions = selectData?.memberData?.map(member => (
+      <Select.Option value={member.id}>{member.memberName}</Select.Option>
+    ));
 
     const okHandle = () => {
       form.validateFields((err, fieldsValue) => {
@@ -67,17 +95,17 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
         form.resetFields();
         handleUpdate({
           id: formVals.id,
-          consumeTime: moment(fieldsValue.consumeTime).format('YYYY-MM-DD HH:mm:ss'),
-          consumeTitle: fieldsValue.consumeTitle,
-          tradeNo: fieldsValue.tradeNo,
-          tradeId: fieldsValue.tradeId,
-          other: fieldsValue.other,
+
+          busiType: fieldsValue.busiType,
+          accountBook: fieldsValue.accountBook,
           amount: fieldsValue.amount! * 100,
-          fundFlow: fieldsValue.fundFlow,
-          status: fieldsValue.status,
-          fundTool: fieldsValue.fundTool,
-          fundToolFrom: fieldsValue.fundToolFrom,
-          memo: fieldsValue.memo,
+          flow: fieldsValue.flow,
+          category: fieldsValue.category,
+          asset: fieldsValue.asset,
+          recordTime: moment(fieldsValue.recordTime).format('YYYY-MM-DD HH:mm:ss'),
+          recordDesc: fieldsValue.recordDesc,
+          familyMember: ((fieldsValue.familyMember as unknown) as String[]).join(','),
+          alipayRecordId: fieldsValue.alipayRecordId,
         });
       });
     };
@@ -85,7 +113,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
     return (
       <Modal
         destroyOnClose
-        title="修改支付宝账单"
+        title="修改账单"
         visible={updateModalVisible}
         onOk={okHandle}
         width={700}
@@ -95,9 +123,9 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
           <Row>
             <Col span={12}>
               <FormItem label="消费时间">
-                {form.getFieldDecorator('consumeTime', {
+                {form.getFieldDecorator('recordTime', {
                   rules: [{ type: 'object', required: true, message: '不能为空！' }],
-                  initialValue: moment(formVals.consumeTime),
+                  initialValue: moment(formVals.recordTime),
                 })(
                   <DatePicker
                     style={{ width: '100%' }}
@@ -112,59 +140,33 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
               </FormItem>
             </Col>
             <Col span={12}>
-              <FormItem label="消费标题">
-                {form.getFieldDecorator('consumeTitle', {
-                  rules: [{ required: true, message: '不能为空！', min: 1 }],
-                  initialValue: formVals.consumeTitle,
-                })(<Input placeholder="消费标题" allowClear />)}
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <FormItem label="商户订单号">
-                {form.getFieldDecorator('tradeNo', {
-                  initialValue: formVals.tradeNo,
-                })(<Input placeholder="商户订单号" allowClear />)}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="流水号">
-                {form.getFieldDecorator('tradeId', {
-                  initialValue: formVals.tradeId,
-                })(<Input placeholder="流水号" allowClear />)}
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <FormItem label="对方">
-                {form.getFieldDecorator('other', {
-                  initialValue: formVals.other,
-                })(<Input placeholder="对方" allowClear />)}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="状态">
-                {form.getFieldDecorator('status', {
-                  rules: [{ required: true, message: '不能为空！', min: 1 }],
-                  initialValue: formVals.status,
-                })(<Input placeholder="状态" allowClear />)}
+              <FormItem label="账本">
+                {form.getFieldDecorator('accountBook', {
+                  rules: [{ required: true, message: '不能为空！' }],
+                  initialValue: formVals.accountBook,
+                })(
+                  <Select allowClear placeholder="账本" style={{ width: '100%' }}>
+                    {bookOptions}
+                  </Select>,
+                )}
               </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span={12}>
               <FormItem label="资金流向">
-                {form.getFieldDecorator('fundFlow', {
-                  rules: [{ required: true, message: '不能为空！', min: 1 }],
-                  initialValue: formVals.fundFlow,
+                {form.getFieldDecorator('flow', {
+                  rules: [{ required: true, message: '不能为空' }],
+                  initialValue: formVals.flow,
                 })(
-                  <Select style={{ width: '100%' }}>
-                    <Select.Option value="1">收入</Select.Option>
-                    <Select.Option value="-1">支出</Select.Option>
-                    <Select.Option value="0">转账</Select.Option>
-                  </Select>,
+                  <Radio.Group buttonStyle="outline">
+                    <Radio.Button value="1" style={{ color: '#389e0d' }}>
+                      收入
+                    </Radio.Button>
+                    <Radio.Button value="-1" style={{ color: '#cf1322' }}>
+                      支出
+                    </Radio.Button>
+                  </Radio.Group>,
                 )}
               </FormItem>
             </Col>
@@ -175,7 +177,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
                   initialValue: formVals.amount,
                 })(
                   <InputNumber
-                    placeholder="消费金额"
+                    placeholder="金额"
                     style={{ width: '100%' }}
                     min={0}
                     precision={2}
@@ -187,26 +189,58 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
           <Row>
             <Col span={12}>
               <FormItem label="账户">
-                {form.getFieldDecorator('fundTool', {
-                  rules: [{ required: true, message: '不能为空！', min: 1 }],
-                  initialValue: formVals.fundTool,
-                })(<Input placeholder="账户" allowClear />)}
+                {form.getFieldDecorator('asset', {
+                  rules: [{ required: true, message: '不能为空！' }],
+                  initialValue: formVals.asset,
+                })(
+                  <Select allowClear placeholder="账户" style={{ width: '100%' }}>
+                    {assetOptionGroups}
+                  </Select>,
+                )}
               </FormItem>
             </Col>
             <Col span={12}>
-              <FormItem label="流出账户">
-                {form.getFieldDecorator('fundToolFrom', {
-                  initialValue: formVals.fundToolFrom,
-                })(<Input placeholder="流出账户" allowClear />)}
+              <FormItem label="分类">
+                {form.getFieldDecorator('category', {
+                  rules: [{ required: true, message: '不能为空！' }],
+                  initialValue: formVals.category,
+                })(
+                  <TreeSelect
+                    style={{ width: '100%' }}
+                    placeholder="类别"
+                    treeData={selectData!.categoryData}
+                    treeDefaultExpandAll={true}
+                    allowClear
+                  />,
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <FormItem label="成员" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+                {form.getFieldDecorator('familyMember', {
+                  rules: [{ required: true, message: '不能为空！' }],
+                  initialValue: formVals.familyMember?.split(','),
+                })(
+                  <Select
+                    allowClear
+                    mode="multiple"
+                    placeholder="多成员平摊"
+                    style={{ width: '100%' }}
+                  >
+                    {memberOptions}
+                  </Select>,
+                )}
               </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
               <FormItem label="备注" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
-                {form.getFieldDecorator('memo', {
-                  initialValue: formVals.memo,
-                })(<TextArea style={{ width: '100%' }} rows={2} maxLength={64} />)}
+                {form.getFieldDecorator('recordDesc', {
+                  initialValue: formVals.recordDesc,
+                })(<TextArea style={{ width: '100%' }} rows={2} maxLength={128} />)}
               </FormItem>
             </Col>
           </Row>

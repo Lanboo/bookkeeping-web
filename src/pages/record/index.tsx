@@ -428,6 +428,7 @@ const TableList: React.FC<TableListProps> = () => {
           }}
           updateModalVisible={updateModalVisible}
           values={stepFormValues}
+          selectData={selectDataEnum.selectData}
         />
       ) : null}
     </PageHeaderWrapper>
