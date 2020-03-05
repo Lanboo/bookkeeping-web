@@ -178,6 +178,9 @@ const TableList: React.FC<TableListProps> = () => {
       title: '账本',
       dataIndex: 'accountBook',
       filters: undefined,
+      formItemProps: {
+        allowClear: 'allowClear',
+      },
       valueEnum: { ...selectDataEnum.selectEnum.bookEnum },
     },
     {
@@ -204,13 +207,17 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'category',
       filters: undefined,
       valueEnum: { ...selectDataEnum.selectEnum.categoryEnum },
-      renderFormItem: () => (
+      renderFormItem: (
+        _item: ProColumns<TableListItem>,
+        config: { onChange?: (value: any) => void },
+      ) => (
         <TreeSelect
           style={{ width: '100%' }}
           placeholder="类别"
           treeData={selectDataEnum.selectData!.categoryData}
           treeDefaultExpandAll={true}
           allowClear
+          onChange={(value: any) => config.onChange && config.onChange(value)}
         />
       ),
     },
@@ -219,7 +226,10 @@ const TableList: React.FC<TableListProps> = () => {
       dataIndex: 'asset',
       filters: undefined,
       valueEnum: { ...selectDataEnum.selectEnum.assetEnum },
-      renderFormItem: () => {
+      renderFormItem: (
+        _item: ProColumns<TableListItem>,
+        config: { onChange?: (value: any) => void },
+      ) => {
         let assetOptionGroups: any[] = [];
 
         if (selectDataEnum.selectData && selectDataEnum.selectData.assetData) {
@@ -240,7 +250,12 @@ const TableList: React.FC<TableListProps> = () => {
           }
         }
         return (
-          <Select allowClear placeholder="账户" style={{ width: '100%' }}>
+          <Select
+            allowClear
+            placeholder="账户"
+            style={{ width: '100%' }}
+            onChange={(value: any) => config.onChange && config.onChange(value)}
+          >
             {assetOptionGroups}
           </Select>
         );
@@ -260,8 +275,15 @@ const TableList: React.FC<TableListProps> = () => {
             </Tag>
           ));
       },
-      renderFormItem: () => (
-        <Select allowClear style={{ width: '100%' }}>
+      renderFormItem: (
+        _item: ProColumns<TableListItem>,
+        config: { onChange?: (value: any) => void },
+      ) => (
+        <Select
+          allowClear
+          style={{ width: '100%' }}
+          onChange={(value: any) => config.onChange && config.onChange(value)}
+        >
           {selectDataEnum.selectData?.memberData?.map(member => (
             <Select.Option value={member.id}>{member.memberName}</Select.Option>
           ))}
