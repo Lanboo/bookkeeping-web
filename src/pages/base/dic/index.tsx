@@ -1,7 +1,7 @@
-import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
+import { DeleteFilled, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Button, Divider, message, Modal } from 'antd';
+import { Button, Divider, message, Modal, Tooltip } from 'antd';
 import React, { useState, useRef } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -13,6 +13,7 @@ import { TableListItem } from './data.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { query, update, save, remove } from './service';
+import { loadSelectData, SelectDataEnum } from './loadSelectData';
 
 interface TableListProps extends FormComponentProps {}
 
@@ -99,6 +100,11 @@ const handleRemove = (
   }
 };
 
+let selectDataEnum: SelectDataEnum = loadSelectData();
+const refreshSelectDataEnum = () => {
+  selectDataEnum = loadSelectData();
+};
+
 const TableList: React.FC<TableListProps> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -158,6 +164,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '父级字典',
       dataIndex: 'parentId',
       filters: undefined,
+      valueEnum: { ...selectDataEnum.selectEnum.dicEnum },
       hideInSearch: true,
     },
     {
@@ -216,7 +223,8 @@ const TableList: React.FC<TableListProps> = () => {
           </Button>,
           <Button
             icon={<DeleteFilled />}
-            type="danger"
+            type="primary"
+            danger
             disabled={deleteBtnState.disabled}
             onClick={() => {
               handleRemove(selectedRows, action);
@@ -224,6 +232,9 @@ const TableList: React.FC<TableListProps> = () => {
           >
             删除
           </Button>,
+          <Tooltip title="刷新缓存">
+            <Button icon={<ReloadOutlined />} type="link" onClick={() => refreshSelectDataEnum()} />
+          </Tooltip>,
         ]}
         tableAlertRender={() => false}
         request={params => query(params)}
@@ -256,6 +267,7 @@ const TableList: React.FC<TableListProps> = () => {
         }}
         onCancel={() => handleModalVisible(false)}
         modalVisible={createModalVisible}
+        selectData={selectDataEnum.selectData}
       />
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
@@ -275,6 +287,7 @@ const TableList: React.FC<TableListProps> = () => {
           }}
           updateModalVisible={updateModalVisible}
           values={stepFormValues}
+          selectData={selectDataEnum.selectData}
         />
       ) : null}
     </PageHeaderWrapper>

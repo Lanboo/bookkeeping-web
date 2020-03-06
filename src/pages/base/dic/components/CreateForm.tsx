@@ -1,25 +1,30 @@
+import React from 'react';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, Row, Col, Radio, InputNumber } from 'antd';
-
+import { Input, Modal, Row, Col, Radio, InputNumber, AutoComplete, Select, Typography } from 'antd';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
-import React from 'react';
+
+import { TableListItem as Dic } from '../data';
+import { SelectData } from '../loadSelectData';
 
 const FormItem = Form.Item;
+const { Text } = Typography;
 
 interface CreateFormProps extends FormComponentProps {
   modalVisible: boolean;
   onSubmit: (fieldsValue: { id: number }) => void;
   onCancel: () => void;
+  selectData: SelectData;
 }
 
 const formLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
 };
 
 const CreateForm: React.FC<CreateFormProps> = props => {
   const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
+  const { selectData } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -27,6 +32,67 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       handleAdd(fieldsValue);
     });
   };
+
+  let tempDicTypeOptions: any[] = [];
+  const dicTypeOptions = selectData?.dicData
+    ?.map(record => ({
+      value: record.dicType,
+      label: (
+        <>
+          <Text type="secondary">{record.dicDesc}</Text>
+          <Text> </Text>
+          <Text>({record.dicType})</Text>
+        </>
+      ),
+    }))
+    .reduce((arr, current) => {
+      if (!tempDicTypeOptions[current.value]) {
+        tempDicTypeOptions[current.value] = current.value;
+        arr.push(current);
+      }
+      return arr;
+    }, tempDicTypeOptions);
+
+  let tempDicDescOptions: any[] = [];
+  const dicDescOptions = selectData?.dicData
+    ?.map(record => ({
+      value: record.dicDesc,
+      label: (
+        <>
+          <Text>{record.dicDesc}</Text>
+          <Text> </Text>
+          <Text type="secondary">({record.dicType})</Text>
+        </>
+      ),
+    }))
+    .reduce((arr, current) => {
+      if (!tempDicTypeOptions[current.value]) {
+        tempDicTypeOptions[current.value] = current.value;
+        arr.push(current);
+      }
+      return arr;
+    }, tempDicDescOptions);
+
+  const parentIdOptionGroups: any[] = [];
+  if (selectData && selectData.dicData) {
+    let optionsMap: Map<String, Dic[]> = new Map();
+    selectData.dicData.forEach(record => {
+      let key = record.dicDesc + '(' + record.dicType + ')';
+      if (!optionsMap[key]) {
+        optionsMap[key] = [];
+      }
+      optionsMap[key].push(record);
+    });
+    for (let key in optionsMap) {
+      let assetOptions = optionsMap[key].map((record: Dic) => (
+        <Select.Option value={record.id}>
+          {record.dicValue}({record.dicKey})
+        </Select.Option>
+      ));
+      parentIdOptionGroups.push(<Select.OptGroup label={key}>{assetOptions}</Select.OptGroup>);
+    }
+  }
+
   return (
     <Modal
       destroyOnClose
@@ -58,14 +124,26 @@ const CreateForm: React.FC<CreateFormProps> = props => {
             <FormItem label="字典类型">
               {form.getFieldDecorator('dicType', {
                 rules: [{ required: true, message: '不能为空！' }],
-              })(<Input placeholder="字典类型" allowClear />)}
+              })(
+                <AutoComplete
+                  allowClear
+                  placeholder="字典类型"
+                  options={dicTypeOptions}
+                ></AutoComplete>,
+              )}
             </FormItem>
           </Col>
           <Col span={12}>
             <FormItem label="类型描述">
               {form.getFieldDecorator('dicDesc', {
                 rules: [{ required: true, message: '不能为空！' }],
-              })(<Input placeholder="字典类型描述" allowClear />)}
+              })(
+                <AutoComplete
+                  allowClear
+                  placeholder="类型描述"
+                  options={dicDescOptions}
+                ></AutoComplete>,
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -82,7 +160,14 @@ const CreateForm: React.FC<CreateFormProps> = props => {
           </Col>
           <Col span={12}>
             <FormItem label="父级字典">
-              {form.getFieldDecorator('parentId', {})(<Input placeholder="父级字典" allowClear />)}
+              {form.getFieldDecorator(
+                'parentId',
+                {},
+              )(
+                <Select allowClear showSearch placeholder="父级字典" style={{ width: '100%' }}>
+                  {parentIdOptionGroups}
+                </Select>,
+              )}
             </FormItem>
           </Col>
         </Row>

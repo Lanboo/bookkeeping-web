@@ -1,10 +1,11 @@
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, Row, Col, InputNumber, Radio } from 'antd';
+import { Input, Modal, Row, Col, InputNumber, Radio, AutoComplete, Typography, Select } from 'antd';
 import React, { Component } from 'react';
 
 import { FormComponentProps } from '@ant-design/compatible/es/form';
-import { TableListItem } from '../data.d';
+import { TableListItem, TableListItem as Dic } from '../data.d';
+import { SelectData } from '../loadSelectData';
 
 export interface FormValueType extends Partial<TableListItem> {}
 
@@ -13,8 +14,10 @@ export interface UpdateFormProps extends FormComponentProps {
   onSubmit: (values: FormValueType) => void;
   updateModalVisible: boolean;
   values: Partial<TableListItem>;
+  selectData?: SelectData;
 }
 const FormItem = Form.Item;
+const { Text } = Typography;
 
 export interface UpdateFormState {
   formVals: FormValueType;
@@ -28,8 +31,8 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
   };
 
   formLayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
   };
 
   constructor(props: UpdateFormProps) {
@@ -51,7 +54,68 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
 
   render() {
     const { updateModalVisible, onSubmit: handleUpdate, onCancel, form } = this.props;
+    const { selectData } = this.props;
     const { formVals } = this.state;
+
+    let tempDicTypeOptions: any[] = [];
+    const dicTypeOptions = selectData?.dicData
+      ?.map(record => ({
+        value: record.dicType,
+        label: (
+          <>
+            <Text type="secondary">{record.dicDesc}</Text>
+            <Text> </Text>
+            <Text>({record.dicType})</Text>
+          </>
+        ),
+      }))
+      .reduce((arr, current) => {
+        if (!tempDicTypeOptions[current.value]) {
+          tempDicTypeOptions[current.value] = current.value;
+          arr.push(current);
+        }
+        return arr;
+      }, tempDicTypeOptions);
+
+    let tempDicDescOptions: any[] = [];
+    const dicDescOptions = selectData?.dicData
+      ?.map(record => ({
+        value: record.dicDesc,
+        label: (
+          <>
+            <Text>{record.dicDesc}</Text>
+            <Text> </Text>
+            <Text type="secondary">({record.dicType})</Text>
+          </>
+        ),
+      }))
+      .reduce((arr, current) => {
+        if (!tempDicTypeOptions[current.value]) {
+          tempDicTypeOptions[current.value] = current.value;
+          arr.push(current);
+        }
+        return arr;
+      }, tempDicDescOptions);
+
+    const parentIdOptionGroups: any[] = [];
+    if (selectData && selectData.dicData) {
+      let optionsMap: Map<String, Dic[]> = new Map();
+      selectData.dicData.forEach(record => {
+        let key = record.dicDesc + '(' + record.dicType + ')';
+        if (!optionsMap[key]) {
+          optionsMap[key] = [];
+        }
+        optionsMap[key].push(record);
+      });
+      for (let key in optionsMap) {
+        let assetOptions = optionsMap[key].map((record: Dic) => (
+          <Select.Option value={record.id}>
+            {record.dicValue}({record.dicKey})
+          </Select.Option>
+        ));
+        parentIdOptionGroups.push(<Select.OptGroup label={key}>{assetOptions}</Select.OptGroup>);
+      }
+    }
 
     const okHandle = () => {
       form.validateFields((err, fieldsValue) => {
@@ -104,7 +168,13 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
                 {form.getFieldDecorator('dicType', {
                   rules: [{ required: true, message: '不能为空！' }],
                   initialValue: formVals.dicType,
-                })(<Input placeholder="字典类型" allowClear />)}
+                })(
+                  <AutoComplete
+                    allowClear
+                    placeholder="字典类型"
+                    options={dicTypeOptions}
+                  ></AutoComplete>,
+                )}
               </FormItem>
             </Col>
             <Col span={12}>
@@ -112,7 +182,13 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
                 {form.getFieldDecorator('dicDesc', {
                   rules: [{ required: true, message: '不能为空！' }],
                   initialValue: formVals.dicDesc,
-                })(<Input placeholder="字典类型描述" allowClear />)}
+                })(
+                  <AutoComplete
+                    allowClear
+                    placeholder="类型描述"
+                    options={dicDescOptions}
+                  ></AutoComplete>,
+                )}
               </FormItem>
             </Col>
           </Row>
@@ -135,7 +211,11 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
               <FormItem label="父级字典">
                 {form.getFieldDecorator('parentId', {
                   initialValue: formVals.parentId,
-                })(<Input placeholder="父级字典" allowClear />)}
+                })(
+                  <Select allowClear showSearch placeholder="父级字典" style={{ width: '100%' }}>
+                    {parentIdOptionGroups}
+                  </Select>,
+                )}
               </FormItem>
             </Col>
           </Row>
