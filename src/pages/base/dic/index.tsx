@@ -155,8 +155,15 @@ const TableList: React.FC<TableListProps> = () => {
       hideInSearch: true,
     },
     {
+      title: '父级字典',
+      dataIndex: 'parentId',
+      filters: undefined,
+      hideInSearch: true,
+    },
+    {
       title: '创建时间',
       dataIndex: 'crtTime',
+      width: 160,
       sorter: true,
       valueType: 'dateTime',
       hideInSearch: true,
@@ -164,6 +171,7 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '修改时间',
       dataIndex: 'uptTime',
+      width: 160,
       sorter: true,
       valueType: 'dateTime',
       hideInSearch: true,
