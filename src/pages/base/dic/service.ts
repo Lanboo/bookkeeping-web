@@ -36,7 +36,7 @@ export async function save(params: TableListParams) {
 }
 
 export async function update(params: TableListParams) {
-  return request('/api/book/update', {
+  return request('/api/dic/update', {
     method: 'POST',
     data: {
       ...params,
