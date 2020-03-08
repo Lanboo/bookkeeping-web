@@ -240,6 +240,7 @@ const TableList: React.FC<TableListProps> = () => {
         request={params => query(params)}
         columns={columns}
         search={{ span: 4 }}
+        // size={"small"}
         rowSelection={{
           onChange: (_selectedRowKeys, selectedRows) => {
             if (selectedRows && selectedRows.length > 0) {
@@ -250,9 +251,10 @@ const TableList: React.FC<TableListProps> = () => {
           },
         }}
         pagination={{
-          defaultPageSize: 10,
+          defaultPageSize: 30,
           showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '30', '50'],
+          pageSizeOptions: ['30', '50', '100', '200'],
+          showTotal: total => `Total ${total} items`,
         }}
       />
       <CreateForm

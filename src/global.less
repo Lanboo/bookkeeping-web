@@ -54,34 +54,36 @@ ol {
 }
 
 :global {
+  // 布局间隔 Start
   .ant-pro-page-header-wrap-children-content {
     margin: 15px 15px 0 !important;
   }
-
   .ant-form-item {
     margin-bottom: 15px !important;
   }
-
   .ant-pro-table-search {
     margin-bottom: 15px !important;
     padding: 15px !important;
   }
-
   .ant-modal-body {
     padding: 15px !important;
   }
+  // 布局间隔 End
 
+  // 表单间隔 Start
   .ant-legacy-form-item-with-help {
-    margin-bottom: 0px !important;
+    margin-bottom: 0 !important;
   }
   .ant-legacy-form-item {
     margin-bottom: 15px !important;
   }
   .ant-legacy-form-explain {
-    margin-bottom: -18px !important;
     margin-top: -5px !important;
+    margin-bottom: -18px !important;
   }
+  // 表单间隔 End
 
+  // pro-table 工具条靠左
   .ant-pro-table-toolbar {
     justify-content: flex-start !important;
   }
@@ -89,16 +91,21 @@ ol {
     flex: none;
   }
 
+  // pro-table 表头
   .ant-table thead > tr > th {
     background: #fff !important;
     border-top: 1px solid #f0f0f0;
   }
 
-  .ant-pro-table .ant-table-content tr:first-child > th:first-child {
-    padding-left: 18px !important;
+  // pro-table 多选框位置 Start
+  .ant-pro-table .ant-table .ant-table-content tr:first-child > th:first-child {
+    padding-left: 16px !important;
   }
-
-  .ant-menu-dark .ant-menu-submenu-open {
-    color: rgba(255, 255, 255, 0.65) !important;
+  .ant-pro-table .ant-table.ant-table-middle .ant-table-content tr:first-child > th:first-child {
+    padding-left: 8px !important;
   }
+  .ant-pro-table .ant-table.ant-table-small .ant-table-content tr:first-child > th:first-child {
+    padding-left: 8px !important;
+  }
+  // pro-table 多选框位置 End
 }

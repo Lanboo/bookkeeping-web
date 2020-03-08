@@ -113,10 +113,6 @@ const handleRemove = (
 
 const selectDataEnum: SelectDataEnum = loadSelectData();
 
-const memberOptions = selectDataEnum.selectData?.memberData?.map(member => (
-  <Select.Option value={member.id}>{member.memberName}</Select.Option>
-));
-
 const TableList: React.FC<TableListProps> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -266,14 +262,11 @@ const TableList: React.FC<TableListProps> = () => {
       filters: undefined,
       dataIndex: 'familyMember',
       render: (_text, record, _index, _action) => {
-        return record.familyMember
-          .split(',')
-          .map(memberId => (
-            <Tag style={{ marginRight: '4px' }}>
-              {selectDataEnum.selectEnum.memberEnum &&
-                selectDataEnum.selectEnum.memberEnum[memberId]}
-            </Tag>
-          ));
+        return record.familyMember.split(',').map(memberId => (
+          <Tag color="blue" style={{ marginRight: '4px' }} key={memberId}>
+            {selectDataEnum.selectEnum.memberEnum && selectDataEnum.selectEnum.memberEnum[memberId]}
+          </Tag>
+        ));
       },
       renderFormItem: (
         _item: ProColumns<TableListItem>,
