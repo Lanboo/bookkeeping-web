@@ -8,6 +8,10 @@ import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { TableListItem } from '../data.d';
 import { SelectData } from '../loadSelectData';
 import { TableListItem as Asset } from '../../asset/data';
+import { BookSupport } from '@/pages/book/BookSupport';
+import { AssetSupport } from '@/pages/asset/AssetSupport';
+import { MemberSupport } from '@/pages/member/MemberSupport';
+import { CategorySupport } from '@/pages/category/CategorySupport';
 
 export interface FormValueType extends Partial<TableListItem> {}
 
@@ -16,7 +20,6 @@ export interface UpdateFormProps extends FormComponentProps {
   onSubmit: (values: FormValueType) => void;
   updateModalVisible: boolean;
   values: Partial<TableListItem>;
-  selectData?: SelectData;
 }
 
 const FormItem = Form.Item;
@@ -61,17 +64,16 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
 
   render() {
     const { updateModalVisible, onSubmit: handleUpdate, onCancel, form } = this.props;
-    const { selectData } = this.props;
     const { formVals } = this.state;
 
-    const bookOptions = selectData?.bookData?.map(book => (
+    const bookOptions = BookSupport.dataEnum.selectData.map(book => (
       <Select.Option value={book.id}>{book.bookName}</Select.Option>
     ));
 
     const assetOptionGroups: any[] = [];
-    if (selectData && selectData.assetData) {
+    if (AssetSupport.dataEnum.selectData) {
       let assetOptionsMap: Map<String, Asset[]> = new Map();
-      selectData.assetData.forEach(asset => {
+      AssetSupport.dataEnum.selectData.forEach(asset => {
         if (!assetOptionsMap[asset.assetType]) {
           assetOptionsMap[asset.assetType] = [];
         }
@@ -85,7 +87,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
       }
     }
 
-    const memberOptions = selectData?.memberData?.map(member => (
+    const memberOptions = MemberSupport.dataEnum.selectData.map(member => (
       <Select.Option value={member.id}>{member.memberName}</Select.Option>
     ));
 
@@ -208,7 +210,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
                   <TreeSelect
                     style={{ width: '100%' }}
                     placeholder="类别"
-                    treeData={selectData!.categoryData}
+                    treeData={CategorySupport.dataEnum.selectData}
                     treeDefaultExpandAll={true}
                     allowClear
                   />,

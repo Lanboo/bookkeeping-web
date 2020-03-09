@@ -6,8 +6,11 @@ import moment from 'moment';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import React from 'react';
 import { TableListItem } from '../data';
-import { SelectData } from '../loadSelectData';
-import { TableListItem as Asset } from '../../asset/data';
+import { TableListItem as Asset } from '@/pages/asset/data';
+import { BookSupport } from '@/pages/book/BookSupport';
+import { AssetSupport } from '@/pages/asset/AssetSupport';
+import { MemberSupport } from '@/pages/member/MemberSupport';
+import { CategorySupport } from '@/pages/category/CategorySupport';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -16,7 +19,6 @@ interface CreateFormProps extends FormComponentProps {
   modalVisible: boolean;
   onSubmit: (fieldsValue: TableListItem) => void;
   onCancel: () => void;
-  selectData?: SelectData;
 }
 
 const formLayout = {
@@ -26,7 +28,6 @@ const formLayout = {
 
 const CreateForm: React.FC<CreateFormProps> = props => {
   const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
-  const { selectData } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue: TableListItem) => {
       if (err) return;
@@ -38,14 +39,14 @@ const CreateForm: React.FC<CreateFormProps> = props => {
     });
   };
 
-  const bookOptions = selectData?.bookData?.map(book => (
+  const bookOptions = BookSupport.dataEnum.selectData.map(book => (
     <Select.Option value={book.id}>{book.bookName}</Select.Option>
   ));
 
   const assetOptionGroups: any[] = [];
-  if (selectData && selectData.assetData) {
+  if (AssetSupport.dataEnum.selectData) {
     let assetOptionsMap: Map<String, Asset[]> = new Map();
-    selectData.assetData.forEach(asset => {
+    AssetSupport.dataEnum.selectData.forEach(asset => {
       if (!assetOptionsMap[asset.assetType]) {
         assetOptionsMap[asset.assetType] = [];
       }
@@ -59,7 +60,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
     }
   }
 
-  const memberOptions = selectData?.memberData?.map(member => (
+  const memberOptions = MemberSupport.dataEnum.selectData.map(member => (
     <Select.Option value={member.id}>{member.memberName}</Select.Option>
   ));
 
@@ -153,7 +154,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
                 <TreeSelect
                   style={{ width: '100%' }}
                   placeholder="类别"
-                  treeData={selectData!.categoryData}
+                  treeData={CategorySupport.dataEnum.selectData}
                   treeDefaultExpandAll={true}
                   allowClear
                 />,

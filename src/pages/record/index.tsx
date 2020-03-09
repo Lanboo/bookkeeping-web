@@ -14,8 +14,11 @@ import { TableListItem } from './data.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { query, update, save, remove } from './service';
-import { loadSelectData, SelectDataEnum } from './loadSelectData';
-import { TableListItem as Asset } from '../../asset/data';
+import { BookSupport } from '../book/BookSupport';
+import { CategorySupport } from '../category/CategorySupport';
+import { AssetSupport } from '../asset/AssetSupport';
+import { TableListItem as Asset } from '../asset/data';
+import { MemberSupport } from '../member/MemberSupport';
 
 const { RangePicker } = DatePicker;
 
@@ -111,8 +114,6 @@ const handleRemove = (
   }
 };
 
-const selectDataEnum: SelectDataEnum = loadSelectData();
-
 const TableList: React.FC<TableListProps> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -127,6 +128,7 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '消费时间',
       dataIndex: 'recordTime',
+      width: 160,
       valueType: 'dateTime',
       hideInSearch: true,
     },
@@ -177,7 +179,7 @@ const TableList: React.FC<TableListProps> = () => {
       formItemProps: {
         allowClear: 'allowClear',
       },
-      valueEnum: { ...selectDataEnum.selectEnum.bookEnum },
+      valueEnum: { ...BookSupport.dataEnum.selectEnum },
     },
     {
       title: '金额',
@@ -202,7 +204,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '分类',
       dataIndex: 'category',
       filters: undefined,
-      valueEnum: { ...selectDataEnum.selectEnum.categoryEnum },
+      valueEnum: { ...CategorySupport.dataEnum.selectEnum },
       renderFormItem: (
         _item: ProColumns<TableListItem>,
         config: { onChange?: (value: any) => void },
@@ -210,7 +212,7 @@ const TableList: React.FC<TableListProps> = () => {
         <TreeSelect
           style={{ width: '100%' }}
           placeholder="类别"
-          treeData={selectDataEnum.selectData!.categoryData}
+          treeData={CategorySupport.dataEnum.selectData}
           treeDefaultExpandAll={true}
           allowClear
           onChange={(value: any) => config.onChange && config.onChange(value)}
@@ -221,16 +223,16 @@ const TableList: React.FC<TableListProps> = () => {
       title: '账户',
       dataIndex: 'asset',
       filters: undefined,
-      valueEnum: { ...selectDataEnum.selectEnum.assetEnum },
+      valueEnum: { ...AssetSupport.dataEnum.selectEnum },
       renderFormItem: (
         _item: ProColumns<TableListItem>,
         config: { onChange?: (value: any) => void },
       ) => {
         let assetOptionGroups: any[] = [];
 
-        if (selectDataEnum.selectData && selectDataEnum.selectData.assetData) {
+        if (AssetSupport.dataEnum.selectData) {
           let assetOptionsMap: Map<String, Asset[]> = new Map();
-          selectDataEnum.selectData.assetData.forEach(asset => {
+          AssetSupport.dataEnum.selectData.forEach(asset => {
             if (!assetOptionsMap[asset.assetType]) {
               assetOptionsMap[asset.assetType] = [];
             }
@@ -264,7 +266,7 @@ const TableList: React.FC<TableListProps> = () => {
       render: (_text, record, _index, _action) => {
         return record.familyMember.split(',').map(memberId => (
           <Tag color="blue" style={{ marginRight: '4px' }} key={memberId}>
-            {selectDataEnum.selectEnum.memberEnum && selectDataEnum.selectEnum.memberEnum[memberId]}
+            {MemberSupport.dataEnum.selectEnum[memberId]}
           </Tag>
         ));
       },
@@ -277,7 +279,7 @@ const TableList: React.FC<TableListProps> = () => {
           style={{ width: '100%' }}
           onChange={(value: any) => config.onChange && config.onChange(value)}
         >
-          {selectDataEnum.selectData?.memberData?.map(member => (
+          {MemberSupport.dataEnum.selectData.map(member => (
             <Select.Option value={member.id}>{member.memberName}</Select.Option>
           ))}
         </Select>
@@ -297,14 +299,14 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '创建时间',
       dataIndex: 'crtTime',
-      sorter: true,
+      width: 160,
       valueType: 'dateTime',
       hideInSearch: true,
     },
     {
       title: '修改时间',
       dataIndex: 'uptTime',
-      sorter: true,
+      width: 160,
       valueType: 'dateTime',
       hideInSearch: true,
     },
@@ -401,7 +403,6 @@ const TableList: React.FC<TableListProps> = () => {
         }}
         onCancel={() => handleModalVisible(false)}
         modalVisible={createModalVisible}
-        selectData={selectDataEnum.selectData}
       />
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
@@ -421,7 +422,6 @@ const TableList: React.FC<TableListProps> = () => {
           }}
           updateModalVisible={updateModalVisible}
           values={stepFormValues}
-          selectData={selectDataEnum.selectData}
         />
       ) : null}
     </PageHeaderWrapper>
