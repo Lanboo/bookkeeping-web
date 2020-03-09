@@ -5,7 +5,7 @@ import { Input, Modal, Row, Col, Radio, InputNumber, AutoComplete, Select, Typog
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 
 import { TableListItem as Dic } from '../data';
-import { SelectData } from '../loadSelectData';
+import { DicSupport } from '../DicSupport';
 
 const FormItem = Form.Item;
 const { Text } = Typography;
@@ -14,7 +14,6 @@ interface CreateFormProps extends FormComponentProps {
   modalVisible: boolean;
   onSubmit: (fieldsValue: { id: number }) => void;
   onCancel: () => void;
-  selectData: SelectData;
 }
 
 const formLayout = {
@@ -24,7 +23,6 @@ const formLayout = {
 
 const CreateForm: React.FC<CreateFormProps> = props => {
   const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
-  const { selectData } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -34,8 +32,8 @@ const CreateForm: React.FC<CreateFormProps> = props => {
   };
 
   let tempDicTypeOptions: any[] = [];
-  const dicTypeOptions = selectData?.dicData
-    ?.map(record => ({
+  const dicTypeOptions = DicSupport.dataEnum.selectData
+    .map(record => ({
       value: record.dicType,
       label: (
         <>
@@ -54,8 +52,8 @@ const CreateForm: React.FC<CreateFormProps> = props => {
     }, tempDicTypeOptions);
 
   let tempDicDescOptions: any[] = [];
-  const dicDescOptions = selectData?.dicData
-    ?.map(record => ({
+  const dicDescOptions = DicSupport.dataEnum.selectData
+    .map(record => ({
       value: record.dicDesc,
       label: (
         <>
@@ -74,9 +72,9 @@ const CreateForm: React.FC<CreateFormProps> = props => {
     }, tempDicDescOptions);
 
   const parentIdOptionGroups: any[] = [];
-  if (selectData && selectData.dicData) {
+  if (DicSupport.dataEnum.selectData) {
     let optionsMap: Map<String, Dic[]> = new Map();
-    selectData.dicData.forEach(record => {
+    DicSupport.dataEnum.selectData.forEach(record => {
       let key = record.dicDesc + '(' + record.dicType + ')';
       if (!optionsMap[key]) {
         optionsMap[key] = [];

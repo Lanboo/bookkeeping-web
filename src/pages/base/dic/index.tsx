@@ -13,8 +13,8 @@ import { TableListItem } from './data.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { query, update, save, remove } from './service';
-import { loadSelectData, SelectDataEnum } from './loadSelectData';
 import { SizeType } from 'antd/lib/config-provider/SizeContext';
+import { DicSupport } from './DicSupport';
 
 interface TableListProps extends FormComponentProps {}
 
@@ -101,11 +101,6 @@ const handleRemove = (
   }
 };
 
-let selectDataEnum: SelectDataEnum = loadSelectData();
-const refreshSelectDataEnum = () => {
-  selectDataEnum = loadSelectData();
-};
-
 const TableList: React.FC<TableListProps> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -166,7 +161,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '父级字典',
       dataIndex: 'parentId',
       filters: undefined,
-      valueEnum: { ...selectDataEnum.selectEnum.dicEnum },
+      valueEnum: { ...DicSupport.dataEnum.selectEnum },
       hideInSearch: true,
     },
     {
@@ -235,7 +230,11 @@ const TableList: React.FC<TableListProps> = () => {
             删除
           </Button>,
           <Tooltip title="刷新缓存">
-            <Button icon={<ReloadOutlined />} type="link" onClick={() => refreshSelectDataEnum()} />
+            <Button
+              icon={<ReloadOutlined />}
+              type="link"
+              onClick={() => DicSupport.support.reload()}
+            />
           </Tooltip>,
         ]}
         tableAlertRender={() => false}
@@ -272,7 +271,6 @@ const TableList: React.FC<TableListProps> = () => {
         }}
         onCancel={() => handleModalVisible(false)}
         modalVisible={createModalVisible}
-        selectData={selectDataEnum.selectData}
       />
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
@@ -292,7 +290,6 @@ const TableList: React.FC<TableListProps> = () => {
           }}
           updateModalVisible={updateModalVisible}
           values={stepFormValues}
-          selectData={selectDataEnum.selectData}
         />
       ) : null}
     </PageHeaderWrapper>

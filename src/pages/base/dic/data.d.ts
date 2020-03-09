@@ -1,4 +1,4 @@
-import { RecordData } from '@/services/data';
+import { RecordData, RecordDataParams } from '@/services/data';
 
 export interface TableListItem extends RecordData {
   id: number;
