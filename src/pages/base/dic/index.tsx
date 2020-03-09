@@ -14,6 +14,7 @@ import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { query, update, save, remove } from './service';
 import { loadSelectData, SelectDataEnum } from './loadSelectData';
+import { SizeType } from 'antd/lib/config-provider/SizeContext';
 
 interface TableListProps extends FormComponentProps {}
 
@@ -109,6 +110,7 @@ const TableList: React.FC<TableListProps> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
+  const [size, setSize] = useState<SizeType>('small');
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
     {
@@ -240,7 +242,8 @@ const TableList: React.FC<TableListProps> = () => {
         request={params => query(params)}
         columns={columns}
         search={{ span: 4 }}
-        // size={"small"}
+        size={size}
+        onSizeChange={size => setSize(size)}
         rowSelection={{
           onChange: (_selectedRowKeys, selectedRows) => {
             if (selectedRows && selectedRows.length > 0) {
