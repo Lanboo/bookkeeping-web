@@ -16,6 +16,7 @@ export default {
   'menu.member': 'Member Management',
   'menu.category': 'Category Management',
   'menu.asset': 'Personal Asset',
+  'menu.rule': 'Rule Management',
   'menu.alipay': 'Alipay',
   'menu.alipay.record': 'Alipay Record',
   'menu.record': 'Record',

@@ -156,6 +156,12 @@ export default {
               component: './asset',
             },
             {
+              name: 'rule',
+              icon: 'branches',
+              path: '/rule',
+              component: './rule',
+            },
+            {
               name: 'alipay',
               icon: 'alipay',
               path: '/alipay',
