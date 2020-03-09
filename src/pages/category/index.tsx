@@ -1,8 +1,7 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Button, Divider, message, Modal } from 'antd';
-import JsTreeList from 'js-tree-list';
+import { Button, Divider, message, Modal, TreeSelect } from 'antd';
 import React, { useState, useRef } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -13,8 +12,9 @@ import 'antd/dist/antd.css';
 import { TableListItem } from './data.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
-import { query, queryList, update, save, remove } from './service';
-import MyTreeSelect from './components/MyTreeSelect';
+import { query, update, save, remove } from './service';
+
+import { CategorySupport } from './CategorySupport';
 
 interface TableListProps extends FormComponentProps {}
 
@@ -91,32 +91,6 @@ const handleRemove = (
   }
 };
 
-let treeData: [] = [];
-
-const treeDataEnum: Map<number, {}> = new Map();
-
-const onLoadData = async () => {
-  await queryList().then(data => {
-    const queryData: TableListItem[] = data;
-    const tempData = queryData.map(item => ({
-      value: item.id,
-      title: item.categoryName,
-      parent: item.parentId ? item.parentId : null,
-    }));
-    const treeDataTemp: [] = new JsTreeList.ListToTree(tempData, {
-      key_id: 'value',
-      key_parent: 'parent',
-      key_child: 'children',
-    }).GetTree();
-    treeData = treeDataTemp;
-    queryData.forEach(record => {
-      treeDataEnum[record.id] = { text: record.categoryName, status: 'Default' };
-    });
-  });
-};
-
-onLoadData();
-
 const TableList: React.FC<TableListProps> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -140,8 +114,21 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '父级类型',
       dataIndex: 'parentId',
-      valueEnum: { ...treeDataEnum },
-      renderFormItem: () => <MyTreeSelect treeData={treeData} />,
+      filters: undefined,
+      valueEnum: { ...CategorySupport.dataEnum.selectEnum },
+      renderFormItem: (
+        _item: ProColumns<TableListItem>,
+        config: { onChange?: (value: any) => void },
+      ) => (
+        <TreeSelect
+          style={{ width: '100%' }}
+          placeholder="父级类别"
+          treeData={CategorySupport.dataEnum.selectData}
+          treeDefaultExpandAll={true}
+          allowClear
+          onChange={(value: any) => config.onChange && config.onChange(value)}
+        />
+      ),
     },
     {
       title: '创建时间',
@@ -234,7 +221,6 @@ const TableList: React.FC<TableListProps> = () => {
         }}
         onCancel={() => handleModalVisible(false)}
         modalVisible={createModalVisible}
-        treeData={treeData}
       />
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
@@ -256,7 +242,6 @@ const TableList: React.FC<TableListProps> = () => {
           }}
           updateModalVisible={updateModalVisible}
           values={stepFormValues}
-          treeData={treeData}
         />
       ) : null}
     </PageHeaderWrapper>

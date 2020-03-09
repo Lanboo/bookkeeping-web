@@ -1,10 +1,11 @@
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Modal } from 'antd';
+import { Input, Modal, TreeSelect } from 'antd';
 
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import React from 'react';
-import MyTreeSelect from './MyTreeSelect';
+
+import { CategorySupport } from '../CategorySupport';
 
 const FormItem = Form.Item;
 
@@ -12,11 +13,10 @@ interface CreateFormProps extends FormComponentProps {
   modalVisible: boolean;
   onSubmit: (fieldsValue: { id: number }) => void;
   onCancel: () => void;
-  treeData?: [];
 }
 
 const CreateForm: React.FC<CreateFormProps> = props => {
-  const { modalVisible, form, onSubmit: handleAdd, onCancel, treeData } = props;
+  const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -24,7 +24,6 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       handleAdd(fieldsValue);
     });
   };
-
 
   return (
     <Modal
@@ -35,10 +34,18 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       onCancel={() => onCancel()}
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="父级类别">
-        {form.getFieldDecorator('parentId', {
-        })
-          (<MyTreeSelect treeData={treeData} />)
-        }
+        {form.getFieldDecorator(
+          'parentId',
+          {},
+        )(
+          <TreeSelect
+            style={{ width: '100%' }}
+            placeholder="类别"
+            treeData={CategorySupport.dataEnum.selectData}
+            treeDefaultExpandAll={true}
+            allowClear
+          />,
+        )}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类别名称">
         {form.getFieldDecorator('categoryName', {

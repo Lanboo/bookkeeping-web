@@ -1,21 +1,20 @@
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Modal } from 'antd';
+import { Input, Modal, TreeSelect } from 'antd';
 import React, { Component } from 'react';
 
 import { FormComponentProps } from '@ant-design/compatible/es/form';
-import { TableListItem } from '../data.d';
-import MyTreeSelect from './MyTreeSelect';
 
-export interface FormValueType extends Partial<TableListItem> {
-}
+import { TableListItem } from '../data.d';
+import { CategorySupport } from '../CategorySupport';
+
+export interface FormValueType extends Partial<TableListItem> {}
 
 export interface UpdateFormProps extends FormComponentProps {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => void;
   updateModalVisible: boolean;
   values: Partial<TableListItem>;
-  treeData?:[];
 }
 const FormItem = Form.Item;
 
@@ -25,8 +24,8 @@ export interface UpdateFormState {
 
 class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
   static defaultProps = {
-    handleUpdate: () => { },
-    handleUpdateModalVisible: () => { },
+    handleUpdate: () => {},
+    handleUpdateModalVisible: () => {},
     values: {},
   };
 
@@ -49,7 +48,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
   }
 
   render() {
-    const { updateModalVisible, onSubmit: handleUpdate, onCancel, form, treeData } = this.props;
+    const { updateModalVisible, onSubmit: handleUpdate, onCancel, form } = this.props;
     const { formVals } = this.state;
 
     const okHandle = () => {
@@ -58,7 +57,7 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
         form.resetFields();
         handleUpdate({
           id: formVals.id,
-          categoryName: fieldsValue.categoryName
+          categoryName: fieldsValue.categoryName,
         });
       });
     };
@@ -79,9 +78,15 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
         <FormItem key="parentId" {...this.formLayout} label="父级类别">
           {form.getFieldDecorator('parentId', {
             initialValue: formVals.parentId,
-          })
-            (<MyTreeSelect treeData={treeData} />)
-          }
+          })(
+            <TreeSelect
+              style={{ width: '100%' }}
+              placeholder="类别"
+              treeData={CategorySupport.dataEnum.selectData}
+              treeDefaultExpandAll={true}
+              allowClear
+            />,
+          )}
         </FormItem>
         <FormItem key="categoryName" {...this.formLayout} label="类别名称">
           {form.getFieldDecorator('categoryName', {
