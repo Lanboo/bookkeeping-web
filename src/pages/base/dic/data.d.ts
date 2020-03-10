@@ -4,7 +4,6 @@ export interface TableListItem extends RecordData {
   id: number;
   dicKey: string;
   dicValue: string;
-  dataType: string;
   dicType: string;
   dicDesc: string;
   parentId: string;

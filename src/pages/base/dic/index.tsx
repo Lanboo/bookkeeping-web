@@ -28,7 +28,6 @@ const handleAdd = async (fields: FormValueType) => {
     await save({
       dicKey: fields.dicKey,
       dicValue: fields.dicValue,
-      dataType: fields.dataType,
       dicType: fields.dicType,
       dicDesc: fields.dicDesc,
       parentId: fields.parentId,
@@ -56,7 +55,6 @@ const handleUpdate = async (fields: FormValueType) => {
       id: fields.id,
       dicKey: fields.dicKey,
       dicValue: fields.dicValue,
-      dataType: fields.dataType,
       dicType: fields.dicType,
       dicDesc: fields.dicDesc,
       parentId: fields.parentId,
@@ -141,11 +139,6 @@ const TableList: React.FC<TableListProps> = () => {
         allowClear: 'allowClear',
         placeholder: '支持模糊查询',
       },
-    },
-    {
-      title: '数据类型',
-      dataIndex: 'dataType',
-      hideInSearch: true,
     },
     {
       title: '是否有效',

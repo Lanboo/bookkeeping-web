@@ -40,10 +40,10 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
     this.state = {
       formVals: {
         id: props.values.id,
-        dicType: props.values.dicType,
-        dicDesc: props.values.dicDesc,
         dicKey: props.values.dicKey,
         dicValue: props.values.dicValue,
+        dicType: props.values.dicType,
+        dicDesc: props.values.dicDesc,
         parentId: props.values.parentId,
         validity: props.values.validity,
         idx: props.values.idx,
@@ -121,10 +121,10 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
         form.resetFields();
         handleUpdate({
           id: formVals.id,
-          dicType: fieldsValue.dicType,
-          dicDesc: fieldsValue.dicDesc,
           dicKey: fieldsValue.dicKey,
           dicValue: fieldsValue.dicValue,
+          dicType: fieldsValue.dicType,
+          dicDesc: fieldsValue.dicDesc,
           parentId: fieldsValue.parentId,
           validity: fieldsValue.validity,
           idx: fieldsValue.idx,
@@ -229,13 +229,6 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
                     <Radio.Button value="0">无效</Radio.Button>
                   </Radio.Group>,
                 )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="数据类型">
-                {form.getFieldDecorator('dataType', {
-                  initialValue: formVals.dataType,
-                })(<Input placeholder="数据类型" allowClear />)}
               </FormItem>
             </Col>
           </Row>
