@@ -6,7 +6,6 @@ import moment from 'moment';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 
 import { TableListItem } from '../data.d';
-import { SelectData } from '../loadSelectData';
 import { TableListItem as Asset } from '../../asset/data';
 import { BookSupport } from '@/pages/book/BookSupport';
 import { AssetSupport } from '@/pages/asset/AssetSupport';
