@@ -7,7 +7,7 @@ import { queryList } from './service';
 export class BookSupport extends AbstractSupport<TableListItem> {
   static type: String = 'book';
   static support: BookSupport = new BookSupport();
-  static dataEnum: SelectDataEnum<TableListItem> = BookSupport.support.reload();
+  static dataEnum: SelectDataEnum<TableListItem> = BookSupport.support.selectDataEnum;
 
   protected async doReload(): Promise<void> {
     queryList().then(data => {
@@ -17,5 +17,7 @@ export class BookSupport extends AbstractSupport<TableListItem> {
         this.selectDataEnum.tableEnum[record.id] = record.bookName;
       });
     });
+
+    BookSupport.dataEnum = this.selectDataEnum;
   }
 }

@@ -15,7 +15,7 @@ export interface DicSelectDataEnum extends SelectDataEnum<TableListItem> {
 export class DicSupport extends AbstractSupport<TableListItem> {
   static type: String = 'dic';
   static support: DicSupport = new DicSupport();
-  static dataEnum: DicSelectDataEnum = DicSupport.support.reload() as DicSelectDataEnum;
+  static dataEnum: DicSelectDataEnum = DicSupport.support.selectDataEnum;
 
   selectDataEnum: DicSelectDataEnum = {
     selectData: new Array<TableListItem>(),
@@ -24,7 +24,7 @@ export class DicSupport extends AbstractSupport<TableListItem> {
   };
 
   protected async doReload(): Promise<void> {
-    queryList().then(data => {
+    await queryList().then(data => {
       this.selectDataEnum.selectData = data;
       this.selectDataEnum.selectData.forEach(record => {
         this.selectDataEnum.tableEnum[record.id] = (
@@ -35,14 +35,13 @@ export class DicSupport extends AbstractSupport<TableListItem> {
           </>
         );
 
-        let tempTypeList: TableListItem[] = this.selectDataEnum.selectTypeData[record.dicType];
-        if (!tempTypeList) {
-          tempTypeList = new Array<TableListItem>();
-          this.selectDataEnum.selectTypeData[record.dicType] = tempTypeList;
+        if (!this.selectDataEnum.selectTypeData[record.dicType]) {
+          this.selectDataEnum.selectTypeData[record.dicType] = new Array<TableListItem>();
         }
-        tempTypeList.push(record);
+        this.selectDataEnum.selectTypeData[record.dicType].push(record);
       });
     });
+    DicSupport.dataEnum = this.selectDataEnum;
   }
 
   protected init(): void {

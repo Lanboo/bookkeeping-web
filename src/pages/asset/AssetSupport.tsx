@@ -7,7 +7,7 @@ import { queryList } from './service';
 export class AssetSupport extends AbstractSupport<TableListItem> {
   static type: String = 'asset';
   static support: AssetSupport = new AssetSupport();
-  static dataEnum: SelectDataEnum<TableListItem> = AssetSupport.support.reload();
+  static dataEnum: SelectDataEnum<TableListItem> = AssetSupport.support.selectDataEnum;
 
   protected async doReload(): Promise<void> {
     queryList().then(data => {
@@ -17,5 +17,6 @@ export class AssetSupport extends AbstractSupport<TableListItem> {
         this.selectDataEnum.tableEnum[record.id] = record.assetName;
       });
     });
+    AssetSupport.dataEnum = this.selectDataEnum;
   }
 }

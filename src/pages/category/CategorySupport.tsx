@@ -9,7 +9,7 @@ import { queryList } from './service';
 export class CategorySupport extends AbstractSupport<Category> {
   static type: String = 'category';
   static support: CategorySupport = new CategorySupport();
-  static dataEnum: SelectDataEnum<Category> = CategorySupport.support.reload();
+  static dataEnum: SelectDataEnum<Category> = CategorySupport.support.selectDataEnum;
 
   protected async doReload(): Promise<void> {
     queryList().then(data => {
@@ -30,5 +30,7 @@ export class CategorySupport extends AbstractSupport<Category> {
         this.selectDataEnum.tableEnum[record.id] = record.categoryName;
       });
     });
+
+    CategorySupport.dataEnum = this.selectDataEnum;
   }
 }

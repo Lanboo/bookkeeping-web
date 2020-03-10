@@ -7,6 +7,10 @@ export abstract class AbstractSupport<T extends RecordData> {
     tableEnum: new Map(),
   };
 
+  constructor() {
+    this.reload();
+  }
+
   reload(): SelectDataEnum<T> {
     this.init();
     this.doReload();
