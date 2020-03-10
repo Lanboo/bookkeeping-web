@@ -26,7 +26,6 @@ export class DicSupport extends AbstractSupport<TableListItem> {
   protected async doReload(): Promise<void> {
     queryList().then(data => {
       this.selectDataEnum.selectData = data;
-
       this.selectDataEnum.selectData.forEach(record => {
         this.selectDataEnum.tableEnum[record.id] = (
           <>
@@ -44,5 +43,13 @@ export class DicSupport extends AbstractSupport<TableListItem> {
         tempTypeList.push(record);
       });
     });
+  }
+
+  protected init(): void {
+    this.selectDataEnum = {
+      selectData: new Array<TableListItem>(),
+      tableEnum: new Map(),
+      selectTypeData: new Map(),
+    };
   }
 }
