@@ -13,7 +13,7 @@ import { TableListItem } from './data.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { query, update, save, remove } from './service';
-import { SizeType } from 'antd/lib/config-provider/SizeContext';
+import { DicSupport } from '../base/dic/DicSupport';
 
 interface TableListProps extends FormComponentProps {}
 
@@ -111,6 +111,8 @@ const TableList: React.FC<TableListProps> = () => {
       formItemProps: {
         allowClear: 'allowClear',
       },
+      filters: undefined,
+      valueEnum: { ...DicSupport.list2TbEnum(DicSupport.dataEnum.selectTypeData['busiType']) },
     },
     {
       title: '目标字段',
@@ -205,7 +207,7 @@ const TableList: React.FC<TableListProps> = () => {
         tableAlertRender={() => false}
         request={params => query(params)}
         columns={columns}
-        search={{ span: 4 }}
+        search={{ span: 6 }}
         rowSelection={{
           onChange: (_selectedRowKeys, selectedRows) => {
             if (selectedRows && selectedRows.length > 0) {

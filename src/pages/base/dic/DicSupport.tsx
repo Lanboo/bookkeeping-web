@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Typography } from 'antd';
 const { Text } = Typography;
 
@@ -7,6 +7,7 @@ import { SelectDataEnum } from '@/services/dataEnum/SelectDataEnum';
 
 import { TableListItem } from './data';
 import { queryList } from './service';
+import { StatusType } from '@ant-design/pro-table/lib/component/status';
 
 export interface DicSelectDataEnum extends SelectDataEnum<TableListItem> {
   selectTypeData: Map<String, TableListItem[]>;
@@ -22,6 +23,16 @@ export class DicSupport extends AbstractSupport<TableListItem> {
     tableEnum: new Map(),
     selectTypeData: new Map(),
   };
+
+  static list2TbEnum(
+    records: TableListItem[],
+  ): Map<String, { text: ReactNode; status: StatusType } | ReactNode> {
+    let tableEnum: Map<string, { text: ReactNode; status: StatusType } | ReactNode> = new Map();
+    records?.forEach(record => {
+      tableEnum[record.dicKey] = record.dicValue;
+    });
+    return tableEnum;
+  }
 
   protected async doReload(): Promise<void> {
     await queryList().then(data => {
