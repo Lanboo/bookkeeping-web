@@ -111,28 +111,12 @@ const TableList: React.FC<TableListProps> = () => {
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
     {
-      title: (
-        <>
-          字典键值 <span style={{ color: 'rgba(0, 0, 0, 0.4)' }}>数据类型</span>
-        </>
-      ),
-      dataIndex: 'dicKey',
-      hideInSearch: true,
-      render: (text, record) => (
-        <>
-          {text}
-          <span style={{ color: 'rgba(0, 0, 0, 0.4)' }}>{record.dataType}</span>
-        </>
-      ),
-    },
-    {
       title: '字典键值',
       dataIndex: 'dicKey',
       formItemProps: {
         allowClear: 'allowClear',
         placeholder: '支持模糊查询',
       },
-      hideInTable: true,
     },
     {
       title: '字典值',
@@ -157,6 +141,11 @@ const TableList: React.FC<TableListProps> = () => {
         allowClear: 'allowClear',
         placeholder: '支持模糊查询',
       },
+    },
+    {
+      title: '数据类型',
+      dataIndex: 'dataType',
+      hideInSearch: true,
     },
     {
       title: '是否有效',
