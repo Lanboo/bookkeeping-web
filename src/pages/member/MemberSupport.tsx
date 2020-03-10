@@ -14,7 +14,7 @@ export class MemberSupport extends AbstractSupport<TableListItem> {
       this.selectDataEnum.selectData = data;
 
       this.selectDataEnum.selectData.forEach(record => {
-        this.selectDataEnum.selectEnum[record.id] = record.memberName;
+        this.selectDataEnum.tableEnum[record.id] = record.memberName;
       });
     });
   }

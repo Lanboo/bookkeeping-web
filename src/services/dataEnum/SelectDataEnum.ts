@@ -5,5 +5,5 @@ import { RecordData } from '../data';
 
 export interface SelectDataEnum<T extends RecordData> {
   selectData: T[];
-  selectEnum: Map<String, { text: ReactNode; status: StatusType } | ReactNode>;
+  tableEnum: Map<String, { text: ReactNode; status: StatusType } | ReactNode>;
 }

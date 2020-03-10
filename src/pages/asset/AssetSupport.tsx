@@ -14,7 +14,7 @@ export class AssetSupport extends AbstractSupport<TableListItem> {
       this.selectDataEnum.selectData = data;
 
       this.selectDataEnum.selectData.forEach(record => {
-        this.selectDataEnum.selectEnum[record.id] = record.assetName;
+        this.selectDataEnum.tableEnum[record.id] = record.assetName;
       });
     });
   }

@@ -27,7 +27,7 @@ export class CategorySupport extends AbstractSupport<Category> {
       this.selectDataEnum.selectData = treeDataTemp;
 
       queryData.forEach(record => {
-        this.selectDataEnum.selectEnum[record.id] = record.categoryName;
+        this.selectDataEnum.tableEnum[record.id] = record.categoryName;
       });
     });
   }

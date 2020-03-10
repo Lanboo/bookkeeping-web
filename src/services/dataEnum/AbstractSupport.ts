@@ -4,7 +4,7 @@ import { RecordData } from '../data';
 export abstract class AbstractSupport<T extends RecordData> {
   selectDataEnum: SelectDataEnum<T> = {
     selectData: new Array<T>(),
-    selectEnum: new Map(),
+    tableEnum: new Map(),
   };
 
   reload(): SelectDataEnum<T> {

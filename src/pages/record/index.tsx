@@ -179,7 +179,7 @@ const TableList: React.FC<TableListProps> = () => {
       formItemProps: {
         allowClear: 'allowClear',
       },
-      valueEnum: { ...BookSupport.dataEnum.selectEnum },
+      valueEnum: { ...BookSupport.dataEnum.tableEnum },
     },
     {
       title: '金额',
@@ -204,7 +204,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '分类',
       dataIndex: 'category',
       filters: undefined,
-      valueEnum: { ...CategorySupport.dataEnum.selectEnum },
+      valueEnum: { ...CategorySupport.dataEnum.tableEnum },
       renderFormItem: (
         _item: ProColumns<TableListItem>,
         config: { onChange?: (value: any) => void },
@@ -223,7 +223,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '账户',
       dataIndex: 'asset',
       filters: undefined,
-      valueEnum: { ...AssetSupport.dataEnum.selectEnum },
+      valueEnum: { ...AssetSupport.dataEnum.tableEnum },
       renderFormItem: (
         _item: ProColumns<TableListItem>,
         config: { onChange?: (value: any) => void },
@@ -266,7 +266,7 @@ const TableList: React.FC<TableListProps> = () => {
       render: (_text, record, _index, _action) => {
         return record.familyMember.split(',').map(memberId => (
           <Tag color="blue" style={{ marginRight: '4px' }} key={memberId}>
-            {MemberSupport.dataEnum.selectEnum[memberId]}
+            {MemberSupport.dataEnum.tableEnum[memberId]}
           </Tag>
         ));
       },

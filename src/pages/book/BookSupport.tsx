@@ -14,7 +14,7 @@ export class BookSupport extends AbstractSupport<TableListItem> {
       this.selectDataEnum.selectData = data;
 
       this.selectDataEnum.selectData.forEach(record => {
-        this.selectDataEnum.selectEnum[record.id] = record.bookName;
+        this.selectDataEnum.tableEnum[record.id] = record.bookName;
       });
     });
   }

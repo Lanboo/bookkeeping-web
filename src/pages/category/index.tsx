@@ -115,7 +115,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '父级类型',
       dataIndex: 'parentId',
       filters: undefined,
-      valueEnum: { ...CategorySupport.dataEnum.selectEnum },
+      valueEnum: { ...CategorySupport.dataEnum.tableEnum },
       renderFormItem: (
         _item: ProColumns<TableListItem>,
         config: { onChange?: (value: any) => void },
