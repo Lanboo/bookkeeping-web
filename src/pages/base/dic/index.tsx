@@ -26,10 +26,11 @@ const handleAdd = async (fields: FormValueType) => {
   const hide = message.loading('正在添加');
   try {
     await save({
-      dicType: fields.dicType,
-      dicDesc: fields.dicDesc,
       dicKey: fields.dicKey,
       dicValue: fields.dicValue,
+      dataType: fields.dataType,
+      dicType: fields.dicType,
+      dicDesc: fields.dicDesc,
       parentId: fields.parentId,
       validity: fields.validity,
       idx: fields.idx,
@@ -53,10 +54,11 @@ const handleUpdate = async (fields: FormValueType) => {
   try {
     await update({
       id: fields.id,
-      dicType: fields.dicType,
-      dicDesc: fields.dicDesc,
       dicKey: fields.dicKey,
       dicValue: fields.dicValue,
+      dataType: fields.dataType,
+      dicType: fields.dicType,
+      dicDesc: fields.dicDesc,
       parentId: fields.parentId,
       validity: fields.validity,
       idx: fields.idx,
@@ -109,12 +111,28 @@ const TableList: React.FC<TableListProps> = () => {
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
     {
+      title: (
+        <>
+          字典键值 <span style={{ color: 'rgba(0, 0, 0, 0.4)' }}>数据类型</span>
+        </>
+      ),
+      dataIndex: 'dicKey',
+      hideInSearch: true,
+      render: (text, record) => (
+        <>
+          {text}
+          <span style={{ color: 'rgba(0, 0, 0, 0.4)' }}>{record.dataType}</span>
+        </>
+      ),
+    },
+    {
       title: '字典键值',
       dataIndex: 'dicKey',
       formItemProps: {
         allowClear: 'allowClear',
         placeholder: '支持模糊查询',
       },
+      hideInTable: true,
     },
     {
       title: '字典值',
@@ -161,7 +179,7 @@ const TableList: React.FC<TableListProps> = () => {
       title: '父级字典',
       dataIndex: 'parentId',
       filters: undefined,
-      valueEnum: { ...DicSupport.dataEnum.selectEnum },
+      valueEnum: { ...DicSupport.dataEnum.tableEnum },
       hideInSearch: true,
     },
     {

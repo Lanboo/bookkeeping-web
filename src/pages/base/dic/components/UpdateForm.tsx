@@ -231,6 +231,13 @@ class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
                 )}
               </FormItem>
             </Col>
+            <Col span={12}>
+              <FormItem label="数据类型">
+                {form.getFieldDecorator('dataType', {
+                  initialValue: formVals.dataType,
+                })(<Input placeholder="数据类型" allowClear />)}
+              </FormItem>
+            </Col>
           </Row>
         </Form>
       </Modal>
