@@ -210,7 +210,7 @@ const TableList: React.FC<TableListProps> = () => {
   const deleteBtnState = { disabled: true };
 
   return (
-    <PageHeaderWrapper>
+    <PageHeaderWrapper title={false}>
       <ProTable<TableListItem>
         actionRef={actionRef}
         rowKey="id"
