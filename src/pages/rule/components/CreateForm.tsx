@@ -7,6 +7,7 @@ import TextArea from 'antd/lib/input/TextArea';
 
 import { DicSupport } from '@/pages/base/dic/DicSupport';
 import { TableListItem as Dic } from '@/pages/base/dic/data';
+import TargetValueInput from './TargetValueInput';
 
 const FormItem = Form.Item;
 
@@ -17,13 +18,14 @@ interface CreateFormProps extends FormComponentProps {
 }
 
 const formLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
 };
 
 const CreateForm: React.FC<CreateFormProps> = props => {
   const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
   const [busiType, setBusiType] = useState<string>('');
+  const [targetField, setTargetField] = useState<string>('');
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -37,7 +39,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       destroyOnClose
       title="新建规则"
       visible={modalVisible}
-      width={600}
+      width={760}
       onOk={okHandle}
       onCancel={() => onCancel()}
     >
@@ -68,7 +70,12 @@ const CreateForm: React.FC<CreateFormProps> = props => {
               {form.getFieldDecorator('targetField', {
                 rules: [{ required: true, message: '不能为空！' }],
               })(
-                <Select allowClear placeholder="目标字段" style={{ width: '100%' }}>
+                <Select<string>
+                  allowClear
+                  placeholder="目标字段"
+                  style={{ width: '100%' }}
+                  onChange={value => setTargetField(value)}
+                >
                   {DicSupport.dataEnum.selectTypeData[busiType]?.map((record: Dic) => (
                     <Select.Option value={record.dicKey}>{record.dicValue}</Select.Option>
                   ))}
@@ -80,13 +87,13 @@ const CreateForm: React.FC<CreateFormProps> = props => {
             <FormItem label="目标值">
               {form.getFieldDecorator('targetFieldValue', {
                 rules: [{ required: true, message: '不能为空！' }],
-              })(<Input placeholder="目标值" allowClear />)}
+              })(<TargetValueInput busiType={busiType} targetField={targetField} />)}
             </FormItem>
           </Col>
         </Row>
         <Row>
           <Col span={24}>
-            <FormItem label="明细表达式" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+            <FormItem label="明细表达式" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }}>
               {form.getFieldDecorator('expression', {
                 rules: [{ required: true, message: '不能为空！' }],
               })(<TextArea style={{ width: '100%' }} rows={1} maxLength={256} />)}

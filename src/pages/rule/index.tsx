@@ -55,7 +55,6 @@ const handleUpdate = async (fields: FormValueType) => {
       expression: fields.expression,
     });
     hide();
-
     message.success('修改成功');
     return true;
   } catch (error) {
@@ -177,7 +176,7 @@ const TableList: React.FC<TableListProps> = () => {
   const deleteBtnState = { disabled: true };
 
   return (
-    <PageHeaderWrapper>
+    <PageHeaderWrapper title={false}>
       <ProTable<TableListItem>
         actionRef={actionRef}
         rowKey="id"
