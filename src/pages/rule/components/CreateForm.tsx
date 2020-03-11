@@ -100,6 +100,17 @@ const CreateForm: React.FC<CreateFormProps> = props => {
             </FormItem>
           </Col>
         </Row>
+        <Form.List>
+          {fields => (
+            <div>
+              {fields.map(field => (
+                <Form.Item {...field}>
+                  <Input />
+                </Form.Item>
+              ))}
+            </div>
+          )}
+        </Form.List>
       </Form>
     </Modal>
   );
