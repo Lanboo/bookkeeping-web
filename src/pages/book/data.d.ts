@@ -17,3 +17,5 @@ export interface TableListParams extends RecordDataParams {
   pageSize?: number;
   current?: number;
 }
+
+export interface FormValueType extends Partial<TableListParams> {}
