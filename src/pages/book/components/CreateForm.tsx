@@ -31,7 +31,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
           label="账本名称"
           labelCol={{ span: 5 }}
           wrapperCol={{ span: 15 }}
-          rules={[{ required: true, message: '不能为空！', min: 1 }]}
+          rules={[{ required: true, message: '不能为空！' }]}
         >
           <Input placeholder="账本名称" allowClear />
         </Form.Item>

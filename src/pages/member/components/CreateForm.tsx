@@ -1,26 +1,21 @@
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Modal } from 'antd';
-
-import { FormComponentProps } from '@ant-design/compatible/es/form';
+import { Input, Modal, Form } from 'antd';
 import React from 'react';
 
-const FormItem = Form.Item;
+import { TableListParams } from '../data';
 
-interface CreateFormProps extends FormComponentProps {
+interface CreateFormProps {
   modalVisible: boolean;
-  onSubmit: (fieldsValue: { id: number }) => void;
+  onSubmit: (fieldsValue: TableListParams) => void;
   onCancel: () => void;
 }
 
 const CreateForm: React.FC<CreateFormProps> = props => {
-  const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
+  const [form] = Form.useForm();
+  const { modalVisible, onSubmit: handleAdd, onCancel } = props;
+  const okHandle = async () => {
+    const fieldsValue = await form.validateFields();
+    form.resetFields();
+    handleAdd(fieldsValue);
   };
   return (
     <Modal
@@ -30,13 +25,19 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       onOk={okHandle}
       onCancel={() => onCancel()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="成员名称">
-        {form.getFieldDecorator('memberName', {
-          rules: [{ required: true, message: '不能为空！', min: 1 }],
-        })(<Input placeholder="成员名称" allowClear/>)}
-      </FormItem>
+      <Form form={form}>
+        <Form.Item
+          name="memberName"
+          label="成员名称"
+          labelCol={{ span: 5 }}
+          wrapperCol={{ span: 15 }}
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <Input placeholder="成员名称" allowClear />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };
 
-export default Form.create<CreateFormProps>()(CreateForm);
+export default CreateForm;
