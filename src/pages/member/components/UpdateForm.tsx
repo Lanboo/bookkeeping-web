@@ -46,14 +46,14 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
       title="修改成员"
       visible={updateModalVisible}
       onOk={okHandle}
-      onCancel={() => onCancel()}
+      onCancel={() => onCancel(false, props.values)}
     >
       <Form
         {...formLayout}
         form={form}
         initialValues={{
           userCode: formVals.userCode,
-          bookName: formVals.memberName,
+          memberName: formVals.memberName,
         }}
       >
         <Form.Item name="userCode" label="用户代码">

@@ -21,7 +21,7 @@ const formLayout = {
 
 const UpdateForm: React.FC<UpdateFormProps> = props => {
   const [form] = Form.useForm();
-  const { onSubmit: handleUpdate, onCancel, updateModalVisible, values } = props;
+  const { onSubmit: handleUpdate, onCancel, updateModalVisible } = props;
 
   const [formVals] = useState<FormValueType>({
     id: props.values.id,
