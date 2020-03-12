@@ -44,7 +44,7 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
       title="修改账本"
       visible={updateModalVisible}
       onOk={okHandle}
-      onCancel={() => onCancel(false, values)}
+      onCancel={() => onCancel(false, props.values)}
     >
       <Form
         {...formLayout}
