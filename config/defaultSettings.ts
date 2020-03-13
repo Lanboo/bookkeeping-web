@@ -31,6 +31,10 @@ export interface DefaultSettings {
    * sticky siderbar
    */
   fixSiderbar: boolean;
+  /**
+   * siderbar width
+   */
+  siderWidth: number;
   menu: { locale: boolean };
   title: string;
   pwa: boolean;
@@ -50,7 +54,8 @@ export default {
   contentWidth: 'Fluid',
   fixedHeader: false,
   autoHideHeader: false,
-  fixSiderbar: false,
+  fixSiderbar: true,
+  siderWidth: 256,
   colorWeak: false,
   menu: {
     locale: true,
