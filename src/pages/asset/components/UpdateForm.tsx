@@ -1,134 +1,111 @@
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, Select, InputNumber } from 'antd';
-import React, { Component } from 'react';
+import { Input, Modal, Select, InputNumber, Form } from 'antd';
+import React, { useState } from 'react';
 
-import { FormComponentProps } from '@ant-design/compatible/es/form';
-import { TableListItem } from '../data.d';
+import { TableListItem, FormValueType } from '../data.d';
 
-export interface FormValueType extends Partial<TableListItem> {}
-
-export interface UpdateFormProps extends FormComponentProps {
+export interface UpdateFormProps {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => void;
   updateModalVisible: boolean;
   values: Partial<TableListItem>;
 }
-const FormItem = Form.Item;
 
 export interface UpdateFormState {
   formVals: FormValueType;
 }
 
-class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
-  static defaultProps = {
-    handleUpdate: () => {},
-    handleUpdateModalVisible: () => {},
-    values: {},
+const formLayout = {
+  labelCol: { span: 7 },
+  wrapperCol: { span: 13 },
+};
+
+const UpdateForm: React.FC<UpdateFormProps> = props => {
+  const [form] = Form.useForm();
+  const { updateModalVisible, onSubmit: handleUpdate, onCancel } = props;
+
+  const [formVals] = useState<FormValueType>({
+    id: props.values.id,
+    userCode: props.values.userCode,
+    assetName: props.values.assetName,
+    assetPattern: props.values.assetPattern,
+    assetType: props.values.assetType,
+    initialAmount: props.values.initialAmount! / 100,
+    balance: props.values.balance! / 100,
+  });
+
+  const okHandle = async () => {
+    const fieldsValue = await form.validateFields();
+    form.resetFields();
+    fieldsValue.id = formVals.id;
+    fieldsValue.balance = (formVals.balance! - (formVals.initialAmount! - fieldsValue.initialAmount)) * 100;
+    fieldsValue.initialAmount = fieldsValue.initialAmount! * 100;
+    handleUpdate(fieldsValue);
   };
 
-  formLayout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 13 },
-  };
-
-  constructor(props: UpdateFormProps) {
-    super(props);
-
-    this.state = {
-      formVals: {
-        id: props.values.id,
-        userCode: props.values.userCode,
-        assetName: props.values.assetName,
-        assetPattern: props.values.assetPattern,
-        assetType: props.values.assetType,
-        initialAmount: props.values.initialAmount! / 100,
-        balance: props.values.balance! / 100,
-      },
-    };
-  }
-
-  render() {
-    const { updateModalVisible, onSubmit: handleUpdate, onCancel, form } = this.props;
-    const { formVals } = this.state;
-
-    const okHandle = () => {
-      form.validateFields((err, fieldsValue) => {
-        if (err) return;
-        form.resetFields();
-        handleUpdate({
-          id: formVals.id,
-          userCode: fieldsValue.userCode,
-          assetName: fieldsValue.assetName,
-          assetPattern: fieldsValue.assetPattern,
-          assetType: fieldsValue.assetType,
-          initialAmount: fieldsValue.initialAmount! * 100,
-          balance:
-            (formVals.balance! - (formVals.initialAmount! - fieldsValue.initialAmount)) * 100,
-        });
-      });
-    };
-
-    return (
-      <Modal
-        destroyOnClose
-        title="修改资产"
-        visible={updateModalVisible}
-        onOk={okHandle}
-        onCancel={() => onCancel()}
+  return (
+    <Modal
+      destroyOnClose
+      title="修改资产"
+      visible={updateModalVisible}
+      onOk={okHandle}
+      onCancel={() => onCancel()}
+    >
+      <Form
+        {...formLayout}
+        form={form}
+        initialValues={{
+          userCode: formVals.userCode,
+          assetName: formVals.assetName,
+          assetPattern: formVals.assetPattern,
+          assetType: formVals.assetType,
+          initialAmount: formVals.initialAmount,
+          balance: formVals.balance,
+        }}
       >
-        <Form {...this.formLayout}>
-          <FormItem key="userCode" {...this.formLayout} label="用户代码">
-            {form.getFieldDecorator('userCode', {
-              initialValue: formVals.userCode,
-            })(<Input placeholder="用户代码" disabled />)}
-          </FormItem>
-          <FormItem key="assetName" label="资产名称">
-            {form.getFieldDecorator('assetName', {
-              rules: [{ required: true, message: '不能为空！', min: 1 }],
-              initialValue: formVals.assetName,
-            })(<Input placeholder="资产名称" allowClear />)}
-          </FormItem>
-          <FormItem key="assetPattern" label="资产模式">
-            {form.getFieldDecorator('assetPattern', {
-              rules: [{ required: true, message: '不能为空！', min: 1 }],
-              initialValue: formVals.assetPattern,
-            })(
-              <Select style={{ width: '100%' }}>
-                <Select value="0">资产账户</Select>
-                <Select value="1">负债账户</Select>
-              </Select>,
-            )}
-          </FormItem>
-          <FormItem key="assetType" label="资产类型">
-            {form.getFieldDecorator('assetType', {
-              rules: [{ required: true, message: '不能为空！', min: 1 }],
-              initialValue: formVals.assetType,
-            })(<Input placeholder="支付宝" allowClear />)}
-          </FormItem>
-          <FormItem key="initialAmount" label="初始金额">
-            {form.getFieldDecorator('initialAmount', {
-              rules: [{ required: true, message: '不能为空！' }],
-              initialValue: formVals.initialAmount,
-            })(
-              <InputNumber
-                placeholder="初始金额"
-                style={{ width: '100%' }}
-                min={0}
-                precision={2}
-              />,
-            )}
-          </FormItem>
-          <FormItem key="balance" label="余额">
-            {form.getFieldDecorator('balance', {
-              rules: [{ required: true, message: '不能为空！' }],
-              initialValue: formVals.balance,
-            })(<InputNumber disabled placeholder="余额" style={{ width: '100%' }} precision={2} />)}
-          </FormItem>
-        </Form>
-      </Modal>
-    );
-  }
+        <Form.Item name="userCode" label="用户代码">
+          <Input placeholder="用户代码" disabled />
+        </Form.Item>
+        <Form.Item
+          name="assetName" label="资产名称"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <Input placeholder="资产名称" allowClear />
+        </Form.Item>
+        <Form.Item
+          name="assetPattern" label="资产模式"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <Select style={{ width: '100%' }}>
+            <Select value="0">资产账户</Select>
+            <Select value="1">负债账户</Select>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="assetType" label="资产类型"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <Input placeholder="支付宝" allowClear />
+        </Form.Item>
+        <Form.Item
+          name="initialAmount" label="初始金额"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <InputNumber
+            placeholder="初始金额"
+            style={{ width: '100%' }}
+            min={0}
+            precision={2}
+          />
+        </Form.Item>
+        <Form.Item
+          name="balance" label="余额"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <InputNumber disabled placeholder="余额" style={{ width: '100%' }} precision={2} />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
 }
 
-export default Form.create<UpdateFormProps>()(UpdateForm);
+export default UpdateForm;

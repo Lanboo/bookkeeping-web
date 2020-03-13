@@ -1,9 +1,7 @@
 import { Input, Modal, Form } from 'antd';
 import React, { useState } from 'react';
 
-import { TableListItem } from '../data.d';
-
-export interface FormValueType extends Partial<TableListItem> {}
+import { TableListItem, FormValueType } from '../data.d';
 
 export interface UpdateFormProps {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;

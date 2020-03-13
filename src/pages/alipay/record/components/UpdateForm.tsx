@@ -1,219 +1,172 @@
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, Select, InputNumber, Row, Col, DatePicker } from 'antd';
-import React, { Component } from 'react';
+import { Input, Modal, Select, InputNumber, Row, Col, DatePicker, Form } from 'antd';
+import React, { useState } from 'react';
 
-import { FormComponentProps } from '@ant-design/compatible/es/form';
-import { TableListItem } from '../data.d';
+import { TableListItem, FormValueType } from '../data.d';
 import moment from 'moment';
 
-export interface FormValueType extends Partial<TableListItem> {}
-
-export interface UpdateFormProps extends FormComponentProps {
+export interface UpdateFormProps {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => void;
   updateModalVisible: boolean;
   values: Partial<TableListItem>;
 }
 
-const FormItem = Form.Item;
 const { TextArea } = Input;
+
+const formLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18, },
+};
 
 export interface UpdateFormState {
   formVals: FormValueType;
 }
 
-class UpdateForm extends Component<UpdateFormProps, UpdateFormState> {
-  static defaultProps = {
-    handleUpdate: () => {},
-    handleUpdateModalVisible: () => {},
-    values: {},
+const UpdateForm: React.FC<UpdateFormProps> = props => {
+  const [form] = Form.useForm();
+  const { updateModalVisible, onSubmit: handleUpdate, onCancel } = props;
+
+  const [formVals] = useState<FormValueType>({
+    id: props.values.id,
+    userCode: props.values.userCode,
+    consumeTime: props.values.consumeTime,
+    consumeTitle: props.values.consumeTitle,
+    tradeNo: props.values.tradeNo,
+    tradeId: props.values.tradeId,
+    other: props.values.other,
+    amount: props.values.amount! / 100,
+    fundFlow: props.values.fundFlow,
+    status: props.values.status,
+    fundTool: props.values.fundTool,
+    fundToolFrom: props.values.fundToolFrom,
+    memo: props.values.memo,
+  });
+
+  const okHandle = async () => {
+    const fieldsValue = await form.validateFields();
+    form.resetFields();
+    fieldsValue.id = formVals.id;
+    fieldsValue.consumeTime = moment(fieldsValue.consumeTime).format('YYYY-MM-DD HH:mm:ss');
+    fieldsValue.amount = fieldsValue.amount! * 100;
+    handleUpdate(fieldsValue);
   };
 
-  formLayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
-
-  constructor(props: UpdateFormProps) {
-    super(props);
-
-    this.state = {
-      formVals: {
-        id: props.values.id,
-        userCode: props.values.userCode,
-        consumeTime: props.values.consumeTime,
-        consumeTitle: props.values.consumeTitle,
-        tradeNo: props.values.tradeNo,
-        tradeId: props.values.tradeId,
-        other: props.values.other,
-        amount: props.values.amount! / 100,
-        fundFlow: props.values.fundFlow,
-        status: props.values.status,
-        fundTool: props.values.fundTool,
-        fundToolFrom: props.values.fundToolFrom,
-        memo: props.values.memo,
-      },
-    };
-  }
-
-  render() {
-    const { updateModalVisible, onSubmit: handleUpdate, onCancel, form } = this.props;
-    const { formVals } = this.state;
-
-    const okHandle = () => {
-      form.validateFields((err, fieldsValue) => {
-        if (err) return;
-        form.resetFields();
-        handleUpdate({
-          id: formVals.id,
-          consumeTime: moment(fieldsValue.consumeTime).format('YYYY-MM-DD HH:mm:ss'),
-          consumeTitle: fieldsValue.consumeTitle,
-          tradeNo: fieldsValue.tradeNo,
-          tradeId: fieldsValue.tradeId,
-          other: fieldsValue.other,
-          amount: fieldsValue.amount! * 100,
-          fundFlow: fieldsValue.fundFlow,
-          status: fieldsValue.status,
-          fundTool: fieldsValue.fundTool,
-          fundToolFrom: fieldsValue.fundToolFrom,
-          memo: fieldsValue.memo,
-        });
-      });
-    };
-
-    return (
-      <Modal
-        destroyOnClose
-        title="修改支付宝账单"
-        visible={updateModalVisible}
-        onOk={okHandle}
-        width={700}
-        onCancel={() => onCancel()}
+  return (
+    <Modal
+      destroyOnClose
+      title="修改支付宝账单"
+      visible={updateModalVisible}
+      onOk={okHandle}
+      width={700}
+      onCancel={() => onCancel()}
+    >
+      <Form
+        {...formLayout}
+        form={form}
+        initialValues={{
+          consumeTime: moment(formVals.consumeTime),
+          consumeTitle: formVals.consumeTitle,
+          tradeNo: formVals.tradeNo,
+          tradeId: formVals.tradeId,
+          other: formVals.other,
+          amount: formVals.amount,
+          fundFlow: formVals.fundFlow,
+          status: formVals.status,
+          fundTool: formVals.fundTool,
+          fundToolFrom: formVals.fundToolFrom,
+          memo: formVals.memo,
+        }}
       >
-        <Form {...this.formLayout}>
-          <Row>
-            <Col span={12}>
-              <FormItem label="消费时间">
-                {form.getFieldDecorator('consumeTime', {
-                  rules: [{ type: 'object', required: true, message: '不能为空！' }],
-                  initialValue: moment(formVals.consumeTime),
-                })(
-                  <DatePicker
-                    style={{ width: '100%' }}
-                    showTime={{
-                      format: 'YYYY-MM-DD HH:mm:ss',
-                    }}
-                    format="YYYY-MM-DD HH:mm:ss"
-                    placeholder="消费时间"
-                    allowClear
-                  />,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="消费标题">
-                {form.getFieldDecorator('consumeTitle', {
-                  rules: [{ required: true, message: '不能为空！', min: 1 }],
-                  initialValue: formVals.consumeTitle,
-                })(<Input placeholder="消费标题" allowClear />)}
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <FormItem label="商户订单号">
-                {form.getFieldDecorator('tradeNo', {
-                  initialValue: formVals.tradeNo,
-                })(<Input placeholder="商户订单号" allowClear />)}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="流水号">
-                {form.getFieldDecorator('tradeId', {
-                  initialValue: formVals.tradeId,
-                })(<Input placeholder="流水号" allowClear />)}
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <FormItem label="对方">
-                {form.getFieldDecorator('other', {
-                  initialValue: formVals.other,
-                })(<Input placeholder="对方" allowClear />)}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="状态">
-                {form.getFieldDecorator('status', {
-                  rules: [{ required: true, message: '不能为空！', min: 1 }],
-                  initialValue: formVals.status,
-                })(<Input placeholder="状态" allowClear />)}
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <FormItem label="资金流向">
-                {form.getFieldDecorator('fundFlow', {
-                  rules: [{ required: true, message: '不能为空！', min: 1 }],
-                  initialValue: formVals.fundFlow,
-                })(
-                  <Select style={{ width: '100%' }}>
-                    <Select.Option value="1">收入</Select.Option>
-                    <Select.Option value="-1">支出</Select.Option>
-                    <Select.Option value="0">转账</Select.Option>
-                  </Select>,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="金额">
-                {form.getFieldDecorator('amount', {
-                  rules: [{ type: 'number', required: true, message: '不能为空！', min: 0 }],
-                  initialValue: formVals.amount,
-                })(
-                  <InputNumber
-                    placeholder="消费金额"
-                    style={{ width: '100%' }}
-                    min={0}
-                    precision={2}
-                  />,
-                )}
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <FormItem label="账户">
-                {form.getFieldDecorator('fundTool', {
-                  rules: [{ required: true, message: '不能为空！', min: 1 }],
-                  initialValue: formVals.fundTool,
-                })(<Input placeholder="账户" allowClear />)}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="流出账户">
-                {form.getFieldDecorator('fundToolFrom', {
-                  initialValue: formVals.fundToolFrom,
-                })(<Input placeholder="流出账户" allowClear />)}
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <FormItem label="备注" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
-                {form.getFieldDecorator('memo', {
-                  initialValue: formVals.memo,
-                })(<TextArea style={{ width: '100%' }} rows={2} maxLength={64} />)}
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
-    );
-  }
+        <Row>
+          <Col span={12}>
+            <Form.Item name="consumeTime" label="消费时间" rules={[{ type: 'object', required: true, message: '不能为空！' }]} >
+              <DatePicker
+                style={{ width: '100%' }}
+                showTime={{
+                  format: 'YYYY-MM-DD HH:mm:ss',
+                }}
+                format="YYYY-MM-DD HH:mm:ss"
+                placeholder="消费时间"
+                allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name="consumeTitle" label="消费标题" rules={[{ required: true, message: '不能为空！' }]} >
+              <Input placeholder="消费标题" allowClear />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Form.Item name="tradeNo" label="商户订单号" >
+              <Input placeholder="商户订单号" allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name="tradeId" label="流水号" >
+              <Input placeholder="流水号" allowClear />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Form.Item name="other" label="对方" >
+              <Input placeholder="对方" allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name="status" label="状态" rules={[{ required: true, message: '不能为空！' }]} >
+              <Input placeholder="状态" allowClear />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Form.Item name="fundFlow" label="资金流向" rules={[{ required: true, message: '不能为空！' }]} >
+              <Select style={{ width: '100%' }}>
+                <Select.Option value="1">收入</Select.Option>
+                <Select.Option value="-1">支出</Select.Option>
+                <Select.Option value="0">转账</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name='amount' label="金额" rules={[{ type: 'number', required: true, message: '最小值为0', min: 0 }]}>
+              <InputNumber
+                placeholder="消费金额"
+                style={{ width: '100%' }}
+                min={0}
+                precision={2}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Form.Item name="fundTool" label="账户" rules={[{ required: true, message: '不能为空！' }]} >
+              <Input placeholder="账户" allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name="fundToolFrom" label="流出账户" >
+              <Input placeholder="流出账户" allowClear />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Form.Item name="memo" label="备注" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }}>
+              <TextArea
+                style={{ width: '100%' }}
+                rows={2}
+                maxLength={64}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    </Modal>
+  );
 }
 
-export default Form.create<UpdateFormProps>()(UpdateForm);
+export default UpdateForm;

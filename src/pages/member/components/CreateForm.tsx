@@ -23,7 +23,10 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       title="新建成员"
       visible={modalVisible}
       onOk={okHandle}
-      onCancel={() => onCancel()}
+      onCancel={() => {
+        form.resetFields();
+        onCancel();
+      }}
     >
       <Form form={form}>
         <Form.Item

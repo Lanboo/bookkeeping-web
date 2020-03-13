@@ -22,3 +22,5 @@ export interface TableListParams extends RecordDataParams {
   initialAmount?: number;
   balance?: number;
 }
+
+export interface FormValueType extends Partial<TableListParams> {}

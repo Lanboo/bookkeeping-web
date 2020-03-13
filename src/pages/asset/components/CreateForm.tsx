@@ -1,16 +1,11 @@
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, Select, InputNumber } from 'antd';
-
-import { FormComponentProps } from '@ant-design/compatible/es/form';
+import { Input, Modal, Select, InputNumber, Form } from 'antd';
 import React from 'react';
-import { TableListItem } from '../data';
 
-const FormItem = Form.Item;
+import { TableListParams } from '../data';
 
-interface CreateFormProps extends FormComponentProps {
+interface CreateFormProps {
   modalVisible: boolean;
-  onSubmit: (fieldsValue: TableListItem) => void;
+  onSubmit: (fieldsValue: TableListParams) => void;
   onCancel: () => void;
 }
 
@@ -20,53 +15,64 @@ const formLayout = {
 };
 
 const CreateForm: React.FC<CreateFormProps> = props => {
-  const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue: TableListItem) => {
-      if (err) return;
-      form.resetFields();
-      fieldsValue.initialAmount = fieldsValue.initialAmount * 100;
-      fieldsValue.balance = fieldsValue.initialAmount;
-      handleAdd(fieldsValue);
-    });
+  const [form] = Form.useForm();
+  const { modalVisible, onSubmit: handleAdd, onCancel } = props;
+  const okHandle = async () => {
+    const fieldsValue = await form.validateFields();
+    form.resetFields();
+    fieldsValue.initialAmount = fieldsValue.initialAmount * 100;
+    fieldsValue.balance = fieldsValue.initialAmount;
+    handleAdd(fieldsValue);
   };
+
   return (
     <Modal
       destroyOnClose
       title="新建资产"
       visible={modalVisible}
       onOk={okHandle}
-      onCancel={() => onCancel()}
+      onCancel={() => {
+        form.resetFields();
+        onCancel();
+      }}
     >
-      <FormItem {...formLayout} label="资产名称">
-        {form.getFieldDecorator('assetName', {
-          rules: [{ required: true, message: '不能为空！', min: 1 }],
-        })(<Input placeholder="资产名称" allowClear />)}
-      </FormItem>
-      <FormItem {...formLayout} label="资产模式">
-        {form.getFieldDecorator('assetPattern', {
-          rules: [{ required: true, message: '不能为空！', min: 1 }],
-          initialValue: '0',
-        })(
+      <Form
+        form={form} {...formLayout}
+        initialValues={{
+          assetPattern: '0',
+          initialAmount: 0,
+        }}
+      >
+        <Form.Item
+          name="assetName" label="资产名称"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <Input placeholder="资产名称" allowClear />
+        </Form.Item>
+        <Form.Item
+          name="assetPattern" label="资产模式"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
           <Select style={{ width: '100%' }}>
             <Select.Option value="0">资产账户</Select.Option>
             <Select.Option value="1">负债账户</Select.Option>
-          </Select>,
-        )}
-      </FormItem>
-      <FormItem {...formLayout} label="资产类型">
-        {form.getFieldDecorator('assetType', {
-          rules: [{ required: true, message: '不能为空！', min: 1 }],
-        })(<Input placeholder="资产类型" allowClear />)}
-      </FormItem>
-      <FormItem {...formLayout} label="初始金额">
-        {form.getFieldDecorator('initialAmount', {
-          rules: [{ required: true, message: '不能为空！' }],
-          initialValue: '0',
-        })(<InputNumber placeholder="初始金额" style={{ width: '100%' }} min={0} precision={2} />)}
-      </FormItem>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="assetType" label="资产类型"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <Input placeholder="资产类型" allowClear />
+        </Form.Item>
+        <Form.Item
+          name="initialAmount" label="初始金额"
+          rules={[{ type: 'number', required: true, message: '不能为空！' }]}
+        >
+          <InputNumber placeholder="初始金额" style={{ width: '100%' }} min={0} precision={2} />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };
 
-export default Form.create<CreateFormProps>()(CreateForm);
+export default CreateForm;

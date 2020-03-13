@@ -1,28 +1,27 @@
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, TreeSelect } from 'antd';
-
-import { FormComponentProps } from '@ant-design/compatible/es/form';
+import { Input, Modal, TreeSelect, Form } from 'antd';
 import React from 'react';
 
+import { TableListParams } from '../data';
 import { CategorySupport } from '../CategorySupport';
 
-const FormItem = Form.Item;
-
-interface CreateFormProps extends FormComponentProps {
+interface CreateFormProps {
   modalVisible: boolean;
-  onSubmit: (fieldsValue: { id: number }) => void;
+  onSubmit: (fieldsValue: TableListParams) => void;
   onCancel: () => void;
 }
 
+const formLayout = {
+  labelCol: { span: 7 },
+  wrapperCol: { span: 13 },
+};
+
 const CreateForm: React.FC<CreateFormProps> = props => {
-  const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
+  const [form] = Form.useForm();
+  const { modalVisible, onSubmit: handleAdd, onCancel } = props;
+  const okHandle = async () => {
+    const fieldsValue = await form.validateFields();
+    form.resetFields();
+    handleAdd(fieldsValue);
   };
 
   return (
@@ -31,29 +30,33 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       title="新建类别"
       visible={modalVisible}
       onOk={okHandle}
-      onCancel={() => onCancel()}
+      onCancel={() => {
+        form.resetFields();
+        onCancel();
+      }}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="父级类别">
-        {form.getFieldDecorator(
-          'parentId',
-          {},
-        )(
+      <Form
+        form={form}
+        {...formLayout}
+      >
+        <Form.Item name="parentId" label="父级类别">
           <TreeSelect
             style={{ width: '100%' }}
             placeholder="类别"
             treeData={CategorySupport.dataEnum.selectData}
             treeDefaultExpandAll={true}
             allowClear
-          />,
-        )}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类别名称">
-        {form.getFieldDecorator('categoryName', {
-          rules: [{ required: true, message: '不能为空！', min: 1 }],
-        })(<Input placeholder="类别名称" allowClear />)}
-      </FormItem>
+          />
+        </Form.Item>
+        <Form.Item
+          name="categoryName" label="类别名称"
+          rules={[{ required: true, message: '不能为空！' }]}
+        >
+          <Input placeholder="类别名称" allowClear />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };
 
-export default Form.create<CreateFormProps>()(CreateForm);
+export default CreateForm;

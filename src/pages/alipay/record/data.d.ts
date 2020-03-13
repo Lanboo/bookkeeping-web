@@ -46,3 +46,5 @@ export interface TableListParams extends RecordDataParams {
 
   operator?: String;
 }
+
+export interface FormValueType extends Partial<TableListParams> {}

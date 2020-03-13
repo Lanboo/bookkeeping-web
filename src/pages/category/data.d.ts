@@ -19,3 +19,5 @@ export interface TableListParams extends RecordDataParams {
   uptTime?: Date;
   children?: TableListItem[];
 }
+
+export interface FormValueType extends Partial<TableListParams> {}

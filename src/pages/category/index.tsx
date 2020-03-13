@@ -1,22 +1,17 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
 import { Button, Divider, message, Modal, TreeSelect } from 'antd';
 import React, { useState, useRef } from 'react';
-import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType, RequestData } from '@ant-design/pro-table';
 import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
 import 'antd/dist/antd.css';
 
-import { TableListItem } from './data.d';
+import { TableListItem, FormValueType } from './data.d';
 import CreateForm from './components/CreateForm';
-import UpdateForm, { FormValueType } from './components/UpdateForm';
+import UpdateForm from './components/UpdateForm';
 import { query, update, save, remove } from './service';
 
 import { CategorySupport } from './CategorySupport';
-
-interface TableListProps extends FormComponentProps {}
 
 /**
  * 添加节点
@@ -82,7 +77,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() {},
+      onCancel() { },
     });
     return true;
   } catch (error) {
@@ -91,7 +86,7 @@ const handleRemove = (
   }
 };
 
-const TableList: React.FC<TableListProps> = () => {
+const TableList: React.FC<{}> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
@@ -120,27 +115,27 @@ const TableList: React.FC<TableListProps> = () => {
         _item: ProColumns<TableListItem>,
         config: { onChange?: (value: any) => void },
       ) => (
-        <TreeSelect
-          style={{ width: '100%' }}
-          placeholder="父级类别"
-          treeData={CategorySupport.dataEnum.selectData}
-          treeDefaultExpandAll={true}
-          allowClear
-          onChange={(value: any) => config.onChange && config.onChange(value)}
-        />
-      ),
+          <TreeSelect
+            style={{ width: '100%' }}
+            placeholder="父级类别"
+            treeData={CategorySupport.dataEnum.selectData}
+            treeDefaultExpandAll={true}
+            allowClear
+            onChange={(value: any) => config.onChange && config.onChange(value)}
+          />
+        ),
     },
     {
       title: '创建时间',
       dataIndex: 'crtTime',
-      sorter: true,
+      width: 160,
       valueType: 'dateTime',
       hideInSearch: true,
     },
     {
       title: '修改时间',
       dataIndex: 'uptTime',
-      sorter: true,
+      width: 160,
       valueType: 'dateTime',
       hideInSearch: true,
     },
@@ -248,4 +243,4 @@ const TableList: React.FC<TableListProps> = () => {
   );
 };
 
-export default Form.create<TableListProps>()(TableList);
+export default TableList;

@@ -1,18 +1,14 @@
 import React from 'react';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Modal, Row, Col, Radio, InputNumber, AutoComplete, Select, Typography } from 'antd';
-import { FormComponentProps } from '@ant-design/compatible/es/form';
+import { Input, Modal, Row, Col, Radio, InputNumber, AutoComplete, Select, Typography, Form } from 'antd';
 
-import { TableListItem as Dic } from '../data';
+import { TableListItem as Dic, TableListParams } from '../data';
 import { DicSupport } from '../DicSupport';
 
-const FormItem = Form.Item;
 const { Text } = Typography;
 
-interface CreateFormProps extends FormComponentProps {
+interface CreateFormProps {
   modalVisible: boolean;
-  onSubmit: (fieldsValue: { id: number }) => void;
+  onSubmit: (fieldsValue: TableListParams) => void;
   onCancel: () => void;
 }
 
@@ -22,13 +18,12 @@ const formLayout = {
 };
 
 const CreateForm: React.FC<CreateFormProps> = props => {
-  const { modalVisible, form, onSubmit: handleAdd, onCancel } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
+  const [form] = Form.useForm();
+  const { modalVisible, onSubmit: handleAdd, onCancel } = props;
+  const okHandle = async () => {
+    const fieldsValue = await form.validateFields();
+    form.resetFields();
+    handleAdd(fieldsValue);
   };
 
   let tempDicTypeOptions: any[] = [];
@@ -98,90 +93,73 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       visible={modalVisible}
       width={700}
       onOk={okHandle}
-      onCancel={() => onCancel()}
+      onCancel={() => {
+        form.resetFields();
+        onCancel();
+      }}
     >
-      <Form {...formLayout}>
+      <Form
+        form={form}
+        {...formLayout}
+        initialValues={{
+          idx: 0,
+          validity: '1',
+        }}
+      >
         <Row>
           <Col span={12}>
-            <FormItem label="键值">
-              {form.getFieldDecorator('dicKey', {
-                rules: [{ required: true, message: '不能为空！' }],
-              })(<Input placeholder="字典键值" allowClear />)}
-            </FormItem>
+            <Form.Item name='dicKey' label="键值" rules={[{ required: true, message: '不能为空！' }]}>
+              <Input placeholder="字典键值" allowClear />
+            </Form.Item>
           </Col>
           <Col span={12}>
-            <FormItem label="字典值">
-              {form.getFieldDecorator('dicValue', {
-                rules: [{ required: true, message: '不能为空！' }],
-              })(<Input placeholder="字典值" allowClear />)}
-            </FormItem>
+            <Form.Item name='dicValue' label="字典值" rules={[{ required: true, message: '不能为空！' }]}>
+              <Input placeholder="字典值" allowClear />
+            </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <FormItem label="字典类型">
-              {form.getFieldDecorator('dicType', {
-                rules: [{ required: true, message: '不能为空！' }],
-              })(
-                <AutoComplete
-                  allowClear
-                  placeholder="字典类型"
-                  options={dicTypeOptions}
-                ></AutoComplete>,
-              )}
-            </FormItem>
+            <Form.Item name='dicType' label="字典类型" rules={[{ required: true, message: '不能为空！' }]}>
+              <AutoComplete
+                allowClear
+                placeholder="字典类型"
+                options={dicTypeOptions}
+              ></AutoComplete>
+            </Form.Item>
           </Col>
           <Col span={12}>
-            <FormItem label="类型描述">
-              {form.getFieldDecorator('dicDesc', {
-                rules: [{ required: true, message: '不能为空！' }],
-              })(
-                <AutoComplete
-                  allowClear
-                  placeholder="类型描述"
-                  options={dicDescOptions}
-                ></AutoComplete>,
-              )}
-            </FormItem>
+            <Form.Item name='dicDesc' label="类型描述" rules={[{ required: true, message: '不能为空！' }]}>
+              <AutoComplete
+                allowClear
+                placeholder="类型描述"
+                options={dicDescOptions}
+              ></AutoComplete>
+            </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <FormItem label="序号">
-              {form.getFieldDecorator('idx', {
-                rules: [{ type: 'number', message: '最小值为0', min: 0 }],
-                initialValue: 0,
-              })(
-                <InputNumber placeholder="序号" style={{ width: '100%' }} min={0} precision={0} />,
-              )}
-            </FormItem>
+            <Form.Item name='idx' label="序号" rules={[{ type: 'number', message: '最小值为0', min: 0 }]}>
+              <InputNumber placeholder="序号" style={{ width: '100%' }} min={0} precision={0} />
+            </Form.Item>
           </Col>
           <Col span={12}>
-            <FormItem label="父级字典">
-              {form.getFieldDecorator(
-                'parentId',
-                {},
-              )(
-                <Select allowClear showSearch placeholder="父级字典" style={{ width: '100%' }}>
-                  {parentIdOptionGroups}
-                </Select>,
-              )}
-            </FormItem>
+            <Form.Item name='parentId' label="父级字典">
+              <Select allowClear showSearch placeholder="父级字典" style={{ width: '100%' }}>
+                {parentIdOptionGroups}
+              </Select>
+            </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <FormItem label="是否有效">
-              {form.getFieldDecorator('validity', {
-                rules: [{ required: true, message: '不能为空！' }],
-                initialValue: '1',
-              })(
-                <Radio.Group buttonStyle="outline">
-                  <Radio.Button value="1">有效</Radio.Button>
-                  <Radio.Button value="0">无效</Radio.Button>
-                </Radio.Group>,
-              )}
-            </FormItem>
+            <Form.Item name='validity' label="是否有效" rules={[{ required: true, message: '不能为空！' }]}>
+              <Radio.Group buttonStyle="outline">
+                <Radio.Button value="1">有效</Radio.Button>
+                <Radio.Button value="0">无效</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
           </Col>
         </Row>
       </Form>
@@ -189,4 +167,4 @@ const CreateForm: React.FC<CreateFormProps> = props => {
   );
 };
 
-export default Form.create<CreateFormProps>()(CreateForm);
+export default CreateForm;

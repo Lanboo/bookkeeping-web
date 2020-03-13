@@ -28,3 +28,5 @@ export interface TableListParams extends RecordDataParams {
   crtTime?: Date;
   uptTime?: Date;
 }
+
+export interface FormValueType extends Partial<TableListParams> {}
