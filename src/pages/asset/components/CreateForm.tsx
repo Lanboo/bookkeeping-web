@@ -37,20 +37,23 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       }}
     >
       <Form
-        form={form} {...formLayout}
+        form={form}
+        {...formLayout}
         initialValues={{
           assetPattern: '0',
           initialAmount: 0,
         }}
       >
         <Form.Item
-          name="assetName" label="资产名称"
+          name="assetName"
+          label="资产名称"
           rules={[{ required: true, message: '不能为空！' }]}
         >
           <Input placeholder="资产名称" allowClear />
         </Form.Item>
         <Form.Item
-          name="assetPattern" label="资产模式"
+          name="assetPattern"
+          label="资产模式"
           rules={[{ required: true, message: '不能为空！' }]}
         >
           <Select style={{ width: '100%' }}>
@@ -59,13 +62,15 @@ const CreateForm: React.FC<CreateFormProps> = props => {
           </Select>
         </Form.Item>
         <Form.Item
-          name="assetType" label="资产类型"
+          name="assetType"
+          label="资产类型"
           rules={[{ required: true, message: '不能为空！' }]}
         >
           <Input placeholder="资产类型" allowClear />
         </Form.Item>
         <Form.Item
-          name="initialAmount" label="初始金额"
+          name="initialAmount"
+          label="初始金额"
           rules={[{ type: 'number', required: true, message: '不能为空！' }]}
         >
           <InputNumber placeholder="初始金额" style={{ width: '100%' }} min={0} precision={2} />

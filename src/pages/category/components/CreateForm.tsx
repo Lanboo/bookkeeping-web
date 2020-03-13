@@ -35,10 +35,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
         onCancel();
       }}
     >
-      <Form
-        form={form}
-        {...formLayout}
-      >
+      <Form form={form} {...formLayout}>
         <Form.Item name="parentId" label="父级类别">
           <TreeSelect
             style={{ width: '100%' }}
@@ -49,7 +46,8 @@ const CreateForm: React.FC<CreateFormProps> = props => {
           />
         </Form.Item>
         <Form.Item
-          name="categoryName" label="类别名称"
+          name="categoryName"
+          label="类别名称"
           rules={[{ required: true, message: '不能为空！' }]}
         >
           <Input placeholder="类别名称" allowClear />

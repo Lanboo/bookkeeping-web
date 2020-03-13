@@ -40,7 +40,6 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
     });
   };
 
-
   return (
     <Modal
       destroyOnClose
@@ -71,7 +70,8 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
           />
         </Form.Item>
         <Form.Item
-          name="categoryName" label="类别名称"
+          name="categoryName"
+          label="类别名称"
           rules={[{ required: true, message: '不能为空！' }]}
         >
           <Input placeholder="类别名称" allowClear />
@@ -79,6 +79,6 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
       </Form>
     </Modal>
   );
-}
+};
 
 export default UpdateForm;

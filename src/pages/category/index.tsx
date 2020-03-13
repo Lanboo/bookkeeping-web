@@ -77,7 +77,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() { },
+      onCancel() {},
     });
     return true;
   } catch (error) {
@@ -115,15 +115,15 @@ const TableList: React.FC<{}> = () => {
         _item: ProColumns<TableListItem>,
         config: { onChange?: (value: any) => void },
       ) => (
-          <TreeSelect
-            style={{ width: '100%' }}
-            placeholder="父级类别"
-            treeData={CategorySupport.dataEnum.selectData}
-            treeDefaultExpandAll={true}
-            allowClear
-            onChange={(value: any) => config.onChange && config.onChange(value)}
-          />
-        ),
+        <TreeSelect
+          style={{ width: '100%' }}
+          placeholder="父级类别"
+          treeData={CategorySupport.dataEnum.selectData}
+          treeDefaultExpandAll={true}
+          allowClear
+          onChange={(value: any) => config.onChange && config.onChange(value)}
+        />
+      ),
     },
     {
       title: '创建时间',

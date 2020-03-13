@@ -15,7 +15,7 @@ const { TextArea } = Input;
 
 const formLayout = {
   labelCol: { span: 6 },
-  wrapperCol: { span: 18, },
+  wrapperCol: { span: 18 },
 };
 
 export interface UpdateFormState {
@@ -79,7 +79,11 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
       >
         <Row>
           <Col span={12}>
-            <Form.Item name="consumeTime" label="消费时间" rules={[{ type: 'object', required: true, message: '不能为空！' }]} >
+            <Form.Item
+              name="consumeTime"
+              label="消费时间"
+              rules={[{ type: 'object', required: true, message: '不能为空！' }]}
+            >
               <DatePicker
                 style={{ width: '100%' }}
                 showTime={{
@@ -87,42 +91,55 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
                 }}
                 format="YYYY-MM-DD HH:mm:ss"
                 placeholder="消费时间"
-                allowClear />
+                allowClear
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="consumeTitle" label="消费标题" rules={[{ required: true, message: '不能为空！' }]} >
+            <Form.Item
+              name="consumeTitle"
+              label="消费标题"
+              rules={[{ required: true, message: '不能为空！' }]}
+            >
               <Input placeholder="消费标题" allowClear />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <Form.Item name="tradeNo" label="商户订单号" >
+            <Form.Item name="tradeNo" label="商户订单号">
               <Input placeholder="商户订单号" allowClear />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="tradeId" label="流水号" >
+            <Form.Item name="tradeId" label="流水号">
               <Input placeholder="流水号" allowClear />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <Form.Item name="other" label="对方" >
+            <Form.Item name="other" label="对方">
               <Input placeholder="对方" allowClear />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="status" label="状态" rules={[{ required: true, message: '不能为空！' }]} >
+            <Form.Item
+              name="status"
+              label="状态"
+              rules={[{ required: true, message: '不能为空！' }]}
+            >
               <Input placeholder="状态" allowClear />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <Form.Item name="fundFlow" label="资金流向" rules={[{ required: true, message: '不能为空！' }]} >
+            <Form.Item
+              name="fundFlow"
+              label="资金流向"
+              rules={[{ required: true, message: '不能为空！' }]}
+            >
               <Select style={{ width: '100%' }}>
                 <Select.Option value="1">收入</Select.Option>
                 <Select.Option value="-1">支出</Select.Option>
@@ -131,24 +148,27 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name='amount' label="金额" rules={[{ type: 'number', required: true, message: '最小值为0', min: 0 }]}>
-              <InputNumber
-                placeholder="消费金额"
-                style={{ width: '100%' }}
-                min={0}
-                precision={2}
-              />
+            <Form.Item
+              name="amount"
+              label="金额"
+              rules={[{ type: 'number', required: true, message: '最小值为0', min: 0 }]}
+            >
+              <InputNumber placeholder="消费金额" style={{ width: '100%' }} min={0} precision={2} />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <Form.Item name="fundTool" label="账户" rules={[{ required: true, message: '不能为空！' }]} >
+            <Form.Item
+              name="fundTool"
+              label="账户"
+              rules={[{ required: true, message: '不能为空！' }]}
+            >
               <Input placeholder="账户" allowClear />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="fundToolFrom" label="流出账户" >
+            <Form.Item name="fundToolFrom" label="流出账户">
               <Input placeholder="流出账户" allowClear />
             </Form.Item>
           </Col>
@@ -156,17 +176,13 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
         <Row>
           <Col span={24}>
             <Form.Item name="memo" label="备注" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }}>
-              <TextArea
-                style={{ width: '100%' }}
-                rows={2}
-                maxLength={64}
-              />
+              <TextArea style={{ width: '100%' }} rows={2} maxLength={64} />
             </Form.Item>
           </Col>
         </Row>
       </Form>
     </Modal>
   );
-}
+};
 
 export default UpdateForm;

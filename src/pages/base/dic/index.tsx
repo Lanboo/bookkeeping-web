@@ -13,7 +13,6 @@ import { query, update, save, remove } from './service';
 import { SizeType } from 'antd/lib/config-provider/SizeContext';
 import { DicSupport } from './DicSupport';
 
-
 /**
  * 添加节点
  * @param fields
@@ -88,7 +87,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() { },
+      onCancel() {},
     });
     return true;
   } catch (error) {

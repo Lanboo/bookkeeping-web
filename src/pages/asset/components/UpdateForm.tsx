@@ -37,7 +37,8 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
     const fieldsValue = await form.validateFields();
     form.resetFields();
     fieldsValue.id = formVals.id;
-    fieldsValue.balance = (formVals.balance! - (formVals.initialAmount! - fieldsValue.initialAmount)) * 100;
+    fieldsValue.balance =
+      (formVals.balance! - (formVals.initialAmount! - fieldsValue.initialAmount)) * 100;
     fieldsValue.initialAmount = fieldsValue.initialAmount! * 100;
     handleUpdate(fieldsValue);
   };
@@ -66,13 +67,15 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
           <Input placeholder="用户代码" disabled />
         </Form.Item>
         <Form.Item
-          name="assetName" label="资产名称"
+          name="assetName"
+          label="资产名称"
           rules={[{ required: true, message: '不能为空！' }]}
         >
           <Input placeholder="资产名称" allowClear />
         </Form.Item>
         <Form.Item
-          name="assetPattern" label="资产模式"
+          name="assetPattern"
+          label="资产模式"
           rules={[{ required: true, message: '不能为空！' }]}
         >
           <Select style={{ width: '100%' }}>
@@ -81,31 +84,25 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
           </Select>
         </Form.Item>
         <Form.Item
-          name="assetType" label="资产类型"
+          name="assetType"
+          label="资产类型"
           rules={[{ required: true, message: '不能为空！' }]}
         >
           <Input placeholder="支付宝" allowClear />
         </Form.Item>
         <Form.Item
-          name="initialAmount" label="初始金额"
+          name="initialAmount"
+          label="初始金额"
           rules={[{ required: true, message: '不能为空！' }]}
         >
-          <InputNumber
-            placeholder="初始金额"
-            style={{ width: '100%' }}
-            min={0}
-            precision={2}
-          />
+          <InputNumber placeholder="初始金额" style={{ width: '100%' }} min={0} precision={2} />
         </Form.Item>
-        <Form.Item
-          name="balance" label="余额"
-          rules={[{ required: true, message: '不能为空！' }]}
-        >
+        <Form.Item name="balance" label="余额" rules={[{ required: true, message: '不能为空！' }]}>
           <InputNumber disabled placeholder="余额" style={{ width: '100%' }} precision={2} />
         </Form.Item>
       </Form>
     </Modal>
   );
-}
+};
 
 export default UpdateForm;
