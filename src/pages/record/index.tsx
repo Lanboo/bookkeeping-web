@@ -1,18 +1,15 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
 import { Button, Divider, message, Modal, DatePicker, Tag, Select, TreeSelect } from 'antd';
 import moment from 'moment';
 import React, { useState, useRef } from 'react';
-import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType, RequestData } from '@ant-design/pro-table';
 import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
 import 'antd/dist/antd.css';
 
-import { TableListItem } from './data.d';
+import { TableListItem, FormValueType } from './data.d';
 import CreateForm from './components/CreateForm';
-import UpdateForm, { FormValueType } from './components/UpdateForm';
+import UpdateForm from './components/UpdateForm';
 import { query, update, save, remove } from './service';
 import { BookSupport } from '../book/BookSupport';
 import { CategorySupport } from '../category/CategorySupport';
@@ -21,8 +18,6 @@ import { TableListItem as Asset } from '../asset/data';
 import { MemberSupport } from '../member/MemberSupport';
 
 const { RangePicker } = DatePicker;
-
-interface TableListProps extends FormComponentProps {}
 
 /**
  * 添加节点
@@ -114,7 +109,7 @@ const handleRemove = (
   }
 };
 
-const TableList: React.FC<TableListProps> = () => {
+const TableList: React.FC<{}> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
@@ -428,4 +423,4 @@ const TableList: React.FC<TableListProps> = () => {
   );
 };
 
-export default Form.create<TableListProps>()(TableList);
+export default TableList;
