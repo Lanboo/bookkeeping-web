@@ -71,17 +71,14 @@ const FormItems: React.FC<{}> = _props => {
             <Row>
                 <Col span={12}>
                     <Form.Item
-                        name="dicKey"
-                        label="键值"
-                        rules={[{ required: true, message: '不能为空！' }]}
-                    >
+                        name="dicKey" label="键值"
+                        rules={[{ required: true, message: '不能为空！' }]}>
                         <Input placeholder="字典键值" allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item
-                        name="dicValue"
-                        label="字典值"
+                        name="dicValue" label="字典值"
                         rules={[{ required: true, message: '不能为空！' }]}
                     >
                         <Input placeholder="字典值" allowClear />
@@ -91,36 +88,25 @@ const FormItems: React.FC<{}> = _props => {
             <Row>
                 <Col span={12}>
                     <Form.Item
-                        name="dicType"
-                        label="字典类型"
+                        name="dicType" label="字典类型"
                         rules={[{ required: true, message: '不能为空！' }]}
                     >
-                        <AutoComplete
-                            allowClear
-                            placeholder="字典类型"
-                            options={dicTypeOptions}
-                        ></AutoComplete>
+                        <AutoComplete allowClear placeholder="字典类型" options={dicTypeOptions}></AutoComplete>
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item
-                        name="dicDesc"
-                        label="类型描述"
+                        name="dicDesc" label="类型描述"
                         rules={[{ required: true, message: '不能为空！' }]}
                     >
-                        <AutoComplete
-                            allowClear
-                            placeholder="类型描述"
-                            options={dicDescOptions}
-                        ></AutoComplete>
+                        <AutoComplete allowClear placeholder="类型描述" options={dicDescOptions}></AutoComplete>
                     </Form.Item>
                 </Col>
             </Row>
             <Row>
                 <Col span={12}>
                     <Form.Item
-                        name="idx"
-                        label="序号"
+                        name="idx" label="序号"
                         rules={[{ type: 'number', message: '最小值为0', min: 0 }]}
                     >
                         <InputNumber placeholder="序号" style={{ width: '100%' }} min={0} precision={0} />
@@ -137,8 +123,7 @@ const FormItems: React.FC<{}> = _props => {
             <Row>
                 <Col span={12}>
                     <Form.Item
-                        name="validity"
-                        label="是否有效"
+                        name="validity" label="是否有效"
                         rules={[{ required: true, message: '不能为空！' }]}
                     >
                         <Radio.Group buttonStyle="outline">

@@ -24,8 +24,6 @@ const CreateForm: React.FC<CreateFormProps> = props => {
     handleAdd(fieldsValue);
   };
 
-
-
   return (
     <Modal
       destroyOnClose
@@ -48,7 +46,7 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       >
         <FormItems />
       </Form>
-    </Modal >
+    </Modal>
   );
 };
 
