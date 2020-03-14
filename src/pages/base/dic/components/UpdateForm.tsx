@@ -32,7 +32,7 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
     dicDesc: props.values.dicDesc,
     parentId: props.values.parentId,
     validity: props.values.validity,
-    idx: props.values.idx ? 0 : props.values.idx,
+    idx: props.values.idx ? props.values.idx : 0,
   });
 
   const okHandle = async () => {
