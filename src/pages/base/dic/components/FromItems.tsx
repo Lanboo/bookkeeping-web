@@ -107,7 +107,7 @@ const FormItems: React.FC<{}> = _props => {
                 <Col span={12}>
                     <Form.Item
                         name="idx" label="序号"
-                        rules={[{ type: 'number', message: '最小值为0', min: 0 }]}
+                        rules={[{ type: 'number', required: true, message: '最小值为0' }]}
                     >
                         <InputNumber placeholder="序号" style={{ width: '100%' }} min={0} precision={0} />
                     </Form.Item>
