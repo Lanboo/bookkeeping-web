@@ -5,7 +5,6 @@ import React from 'react';
 import { TableListParams } from '../data';
 import FormItems from './FromItems';
 
-
 interface CreateFormProps {
   modalVisible: boolean;
   onSubmit: (fieldsValue: TableListParams) => void;

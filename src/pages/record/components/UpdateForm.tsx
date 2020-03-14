@@ -78,6 +78,6 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
       </Form>
     </Modal>
   );
-}
+};
 
 export default UpdateForm;
