@@ -108,7 +108,7 @@ const TableList: React.FC<{}> = () => {
       dataIndex: 'dicKey',
       formItemProps: {
         allowClear: 'allowClear',
-        placeholder: '支持模糊查询',
+        placeholder: '精确查询',
       },
     },
     {
@@ -124,7 +124,7 @@ const TableList: React.FC<{}> = () => {
       dataIndex: 'dicType',
       formItemProps: {
         allowClear: 'allowClear',
-        placeholder: '支持模糊查询',
+        placeholder: '精确查询',
       },
     },
     {
