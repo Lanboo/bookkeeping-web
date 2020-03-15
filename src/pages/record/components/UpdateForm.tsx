@@ -1,4 +1,3 @@
-import '@ant-design/compatible/assets/index.css';
 import { Modal, Form } from 'antd';
 import React, { useState } from 'react';
 import moment from 'moment';

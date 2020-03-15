@@ -1,21 +1,16 @@
 import { DeleteFilled, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
 import { Button, Divider, message, Modal, Tooltip } from 'antd';
 import React, { useState, useRef } from 'react';
-import { FormComponentProps } from '@ant-design/compatible/es/form';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType, RequestData } from '@ant-design/pro-table';
 import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
 import 'antd/dist/antd.css';
 
-import { TableListItem } from './data.d';
+import { TableListItem, FormValueType } from './data.d';
 import CreateForm from './components/CreateForm';
-import UpdateForm, { FormValueType } from './components/UpdateForm';
+import UpdateForm from './components/UpdateForm';
 import { query, update, save, remove } from './service';
 import { DicSupport } from '../base/dic/DicSupport';
-
-interface TableListProps extends FormComponentProps {}
 
 /**
  * 添加节点
@@ -29,6 +24,7 @@ const handleAdd = async (fields: FormValueType) => {
       targetField: fields.targetField,
       targetFieldValue: fields.targetFieldValue,
       expression: fields.expression,
+      details: fields.details,
     });
     hide();
     message.success('添加成功');
@@ -53,6 +49,7 @@ const handleUpdate = async (fields: FormValueType) => {
       targetField: fields.targetField,
       targetFieldValue: fields.targetFieldValue,
       expression: fields.expression,
+      details: fields.details,
     });
     hide();
     message.success('修改成功');
@@ -84,7 +81,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() {},
+      onCancel() { },
     });
     return true;
   } catch (error) {
@@ -93,7 +90,7 @@ const handleRemove = (
   }
 };
 
-const TableList: React.FC<TableListProps> = () => {
+const TableList: React.FC<{}> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
@@ -116,6 +113,7 @@ const TableList: React.FC<TableListProps> = () => {
     {
       title: '目标字段',
       dataIndex: 'targetField',
+      renderText: (text, record) => (DicSupport.dataEnum.typeMap[record.busiType][text].dicValue),
     },
     {
       title: '目标值',
@@ -259,4 +257,4 @@ const TableList: React.FC<TableListProps> = () => {
   );
 };
 
-export default Form.create<TableListProps>()(TableList);
+export default TableList;

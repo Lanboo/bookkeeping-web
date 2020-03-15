@@ -11,6 +11,7 @@ import { StatusType } from '@ant-design/pro-table/lib/component/status';
 
 export interface DicSelectDataEnum extends SelectDataEnum<TableListItem> {
   selectTypeData: Map<String, TableListItem[]>;
+  typeMap: Map<String, Map<String, TableListItem>>;
 }
 
 export class DicSupport extends AbstractSupport<TableListItem> {
@@ -22,6 +23,7 @@ export class DicSupport extends AbstractSupport<TableListItem> {
     selectData: new Array<TableListItem>(),
     tableEnum: new Map(),
     selectTypeData: new Map(),
+    typeMap: new Map(),
   };
 
   static list2TbEnum(
@@ -36,7 +38,15 @@ export class DicSupport extends AbstractSupport<TableListItem> {
 
   protected async doReload(): Promise<void> {
     await queryList().then(data => {
-      this.selectDataEnum.selectData = data;
+      let tempData: TableListItem[] = data;
+      this.selectDataEnum.selectData = tempData.sort((a, b) => {
+        if (a.idx != b.idx) {
+          return a.idx - b.idx;
+        }
+        else {
+          return a.id - b.id;
+        }
+      });
       this.selectDataEnum.selectData.forEach(record => {
         this.selectDataEnum.tableEnum[record.id] = (
           <>
@@ -50,6 +60,11 @@ export class DicSupport extends AbstractSupport<TableListItem> {
           this.selectDataEnum.selectTypeData[record.dicType] = new Array<TableListItem>();
         }
         this.selectDataEnum.selectTypeData[record.dicType].push(record);
+
+        if (!this.selectDataEnum.typeMap[record.dicType]) {
+          this.selectDataEnum.typeMap[record.dicType] = new Map();
+        }
+        this.selectDataEnum.typeMap[record.dicType][record.dicKey] = record;
       });
     });
     DicSupport.dataEnum = this.selectDataEnum;
@@ -60,6 +75,7 @@ export class DicSupport extends AbstractSupport<TableListItem> {
       selectData: new Array<TableListItem>(),
       tableEnum: new Map(),
       selectTypeData: new Map(),
+      typeMap: new Map(),
     };
   }
 }

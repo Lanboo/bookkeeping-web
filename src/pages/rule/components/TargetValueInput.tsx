@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TreeSelect, Input, Select, Radio } from 'antd';
 
 import { BookSupport } from '@/pages/book/BookSupport';
@@ -115,21 +115,7 @@ class TargetValueInput extends React.Component<FormProps> {
       }
     }
     return targetValueInput;
-    // return (
-    //     <TreeSelect
-    //         style={{ width: '100%' }}
-    //         placeholder="目标值"
-    //         value={this.state.value}
-    //         onChange={this.handleChange}
-    //         allowClear
-    //     />
-    // );
   }
 }
 
 export default TargetValueInput;
-
-// 不能是函数式组件
-// export default () => (
-//   <MyTreeSelect />
-// );
