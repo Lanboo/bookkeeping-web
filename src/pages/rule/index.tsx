@@ -1,16 +1,16 @@
-import { DeleteFilled, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import { Button, Divider, message, Modal, Tooltip } from 'antd';
-import React, { useState, useRef } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable, { ProColumns, ActionType, RequestData } from '@ant-design/pro-table';
-import { UseFetchDataAction } from '@ant-design/pro-table/lib/useFetchData';
+import {DeleteFilled, PlusOutlined, ReloadOutlined} from '@ant-design/icons';
+import {Button, Divider, message, Modal, Tooltip} from 'antd';
+import React, {useState, useRef} from 'react';
+import {PageHeaderWrapper} from '@ant-design/pro-layout';
+import ProTable, {ProColumns, ActionType, RequestData} from '@ant-design/pro-table';
+import {UseFetchDataAction} from '@ant-design/pro-table/lib/useFetchData';
 import 'antd/dist/antd.css';
 
-import { TableListItem, FormValueType } from './data.d';
+import {TableListItem, FormValueType} from './data.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
-import { query, update, save, remove } from './service';
-import { DicSupport } from '../base/dic/DicSupport';
+import {query, update, save, remove} from './service';
+import {DicSupport} from '../base/dic/DicSupport';
 
 /**
  * 添加节点
@@ -81,7 +81,7 @@ const handleRemove = (
         message.success('删除成功，即将刷新');
         action.reload();
       },
-      onCancel() { },
+      onCancel() {},
     });
     return true;
   } catch (error) {
@@ -108,12 +108,12 @@ const TableList: React.FC<{}> = () => {
         allowClear: 'allowClear',
       },
       filters: undefined,
-      valueEnum: { ...DicSupport.list2TbEnum(DicSupport.dataEnum.selectTypeData['busiType']) },
+      valueEnum: {...DicSupport.list2TbEnum(DicSupport.dataEnum.selectTypeData['busiType'])},
     },
     {
       title: '目标字段',
       dataIndex: 'targetField',
-      renderText: (text, record) => (DicSupport.dataEnum.typeMap[record.busiType][text].dicValue),
+      renderText: (text, record) => DicSupport.dataEnum.typeMap[record.busiType][text].dicValue,
     },
     {
       title: '目标值',
@@ -171,14 +171,14 @@ const TableList: React.FC<{}> = () => {
     },
   ];
 
-  const deleteBtnState = { disabled: true };
+  const deleteBtnState = {disabled: true};
 
   return (
     <PageHeaderWrapper title={false}>
       <ProTable<TableListItem>
         actionRef={actionRef}
         rowKey="id"
-        toolBarRender={(action, { selectedRows }) => [
+        toolBarRender={(action, {selectedRows}) => [
           <Button icon={<PlusOutlined />} type="primary" onClick={() => handleModalVisible(true)}>
             新建
           </Button>,
@@ -204,7 +204,7 @@ const TableList: React.FC<{}> = () => {
         tableAlertRender={() => false}
         request={params => query(params)}
         columns={columns}
-        search={{ span: 6 }}
+        search={{span: 6}}
         rowSelection={{
           onChange: (_selectedRowKeys, selectedRows) => {
             if (selectedRows && selectedRows.length > 0) {

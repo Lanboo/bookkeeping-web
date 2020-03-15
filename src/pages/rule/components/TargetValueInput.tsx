@@ -1,11 +1,11 @@
 import React from 'react';
-import { TreeSelect, Input, Select, Radio } from 'antd';
+import {TreeSelect, Input, Select, Radio} from 'antd';
 
-import { BookSupport } from '@/pages/book/BookSupport';
-import { MemberSupport } from '@/pages/member/MemberSupport';
-import { CategorySupport } from '@/pages/category/CategorySupport';
-import { AssetSupport } from '@/pages/asset/AssetSupport';
-import { TableListItem as Asset } from '@/pages/asset/data';
+import {BookSupport} from '@/pages/book/BookSupport';
+import {MemberSupport} from '@/pages/member/MemberSupport';
+import {CategorySupport} from '@/pages/category/CategorySupport';
+import {AssetSupport} from '@/pages/asset/AssetSupport';
+import {TableListItem as Asset} from '@/pages/asset/data';
 
 interface FormProps {
   busiType?: string;
@@ -22,14 +22,14 @@ class TargetValueInput extends React.Component<FormProps> {
   };
 
   triggerChange = (changedValue: String) => {
-    const { onChange } = this.props;
+    const {onChange} = this.props;
     if (onChange) {
       onChange(changedValue);
     }
   };
 
   render() {
-    const { busiType, targetField } = this.props;
+    const {busiType, targetField} = this.props;
 
     const assetOptionGroups: any[] = [];
     if (AssetSupport.dataEnum.selectData) {
@@ -57,7 +57,7 @@ class TargetValueInput extends React.Component<FormProps> {
           <Select<string>
             allowClear
             placeholder="目标值-账本"
-            style={{ width: '100%' }}
+            style={{width: '100%'}}
             onChange={value => this.handleChange(value)}
           >
             {BookSupport.dataEnum.selectData.map(record => (
@@ -68,10 +68,10 @@ class TargetValueInput extends React.Component<FormProps> {
       } else if ('flow' === targetField) {
         targetValueInput = (
           <Radio.Group buttonStyle="outline" onChange={e => this.handleChange(e.target.value)}>
-            <Radio.Button value="1" style={{ color: '#389e0d' }}>
+            <Radio.Button value="1" style={{color: '#389e0d'}}>
               收入
             </Radio.Button>
-            <Radio.Button value="-1" style={{ color: '#cf1322' }}>
+            <Radio.Button value="-1" style={{color: '#cf1322'}}>
               支出
             </Radio.Button>
           </Radio.Group>
@@ -80,7 +80,7 @@ class TargetValueInput extends React.Component<FormProps> {
         targetValueInput = (
           <TreeSelect<string>
             allowClear
-            style={{ width: '100%' }}
+            style={{width: '100%'}}
             placeholder="目标值-类别"
             treeData={CategorySupport.dataEnum.selectData}
             treeDefaultExpandAll={true}
@@ -92,7 +92,7 @@ class TargetValueInput extends React.Component<FormProps> {
           <Select<string>
             allowClear
             placeholder="目标值-账户"
-            style={{ width: '100%' }}
+            style={{width: '100%'}}
             onChange={value => this.handleChange(value)}
           >
             {assetOptionGroups}
@@ -104,7 +104,7 @@ class TargetValueInput extends React.Component<FormProps> {
             allowClear
             mode="multiple"
             placeholder="目标值-成员"
-            style={{ width: '100%' }}
+            style={{width: '100%'}}
             onChange={value => this.handleChange(value.join(','))}
           >
             {MemberSupport.dataEnum.selectData.map(record => (

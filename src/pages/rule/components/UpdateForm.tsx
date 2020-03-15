@@ -1,9 +1,9 @@
-import { Modal, Form } from 'antd';
-import React, { useState } from 'react';
+import {Modal, Form} from 'antd';
+import React, {useState} from 'react';
 
-import { TableListItem } from '../data.d';
+import {TableListItem} from '../data.d';
 
-export interface FormValueType extends Partial<TableListItem> { }
+export interface FormValueType extends Partial<TableListItem> {}
 
 export interface UpdateFormProps {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
@@ -17,13 +17,13 @@ export interface UpdateFormState {
 }
 
 const formLayout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
+  labelCol: {span: 6},
+  wrapperCol: {span: 18},
 };
 
 const UpdateForm: React.FC<UpdateFormProps> = props => {
   const [form] = Form.useForm();
-  const { updateModalVisible, onSubmit: handleUpdate, onCancel } = props;
+  const {updateModalVisible, onSubmit: handleUpdate, onCancel} = props;
 
   const [formVals] = useState<FormValueType>({
     id: props.values.id,
@@ -40,7 +40,6 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
     handleUpdate(fieldsValue);
   };
 
-
   return (
     <Modal
       destroyOnClose
@@ -50,16 +49,9 @@ const UpdateForm: React.FC<UpdateFormProps> = props => {
       onOk={okHandle}
       onCancel={() => onCancel()}
     >
-      <Form
-        {...formLayout}
-        form={form}
-        initialValues={{
-        }}
-      >
-      </Form >
-    </Modal >
+      <Form {...formLayout} form={form} initialValues={{}}></Form>
+    </Modal>
   );
-}
-
+};
 
 export default UpdateForm;

@@ -1,5 +1,5 @@
-import { RecordData, RecordDataParams } from '@/services/data';
-import { TableListItem as Detail, TableListParams as DetailParams } from './data.detail'
+import {RecordData, RecordDataParams} from '@/services/data';
+import {TableListItem as Detail, TableListParams as DetailParams} from './data.detail';
 
 export interface TableListItem extends RecordData {
   id: number;
@@ -27,4 +27,4 @@ export interface TableListParams extends RecordDataParams {
   uptTime?: Date;
 }
 
-export interface FormValueType extends Partial<TableListParams> { }
+export interface FormValueType extends Partial<TableListParams> {}
